@@ -2,12 +2,14 @@
 using Server.Utils;
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Agent.Utils
 {
     public interface ISensorWatcher
     {
-        Envelope GetSensorsData();
+        [CanBeNull]
+        HardwareTree GetSensorsData();
 
         void WatchProc();
     }
@@ -15,7 +17,7 @@ namespace Agent.Utils
     class SensorWatcher : ISensorWatcher
     {
         private object sync = new object();
-        private Queue<HardwareTree> lastCatchedData;
+        private readonly Queue<HardwareTree> lastCatchedData;
 
         public SensorWatcher()
         {
@@ -35,32 +37,10 @@ namespace Agent.Utils
                 lastCatchedData.Enqueue(tree);
         }
 
-        public Envelope GetSensorsData()
+        public HardwareTree GetSensorsData()
         {
             lock (sync)
-            {
-                if (lastCatchedData.Count != 0)
-                    return new Envelope()
-                    {
-                        Header = new Header
-                        {
-                            AgentId = Guid.NewGuid(),
-                            AgentTime = DateTime.Now,
-                            ErrorMsg = ""
-                        },
-                        HardwareTree = lastCatchedData.Dequeue()
-                    };
-            }
-            return new Envelope()
-            {
-                Header = new Header
-                {
-                    AgentId = Guid.NewGuid(),
-                    AgentTime = DateTime.Now,
-                    ErrorMsg = "Queue is empty"
-                },
-                HardwareTree = null
-            };
+                return lastCatchedData.Count > 0 ? lastCatchedData.Dequeue() : null;
         }
     }
 }

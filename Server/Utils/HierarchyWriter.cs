@@ -11,7 +11,7 @@ namespace Server.Utils
 
     public class HierarchyWriter : IHierarchyWriter
     {
-        private IDataContext context;
+        private readonly IDataContext context;
 
         public HierarchyWriter(IDataContext ctx)
         {
@@ -22,24 +22,24 @@ namespace Server.Utils
         {
             foreach (var container in containers)
             {
-                var CurrContainer = new Container()
+                var currentContainer = new Container // naming!
                 {
                     AgentId = agent.Id,
                     Id = Guid.NewGuid(),
                     ParentContainerId = container.ParentId
                 };
 
-                context.Containers.Add(CurrContainer);
+                context.Containers.Add(currentContainer);
 
                 foreach(var sensor in container.Sensors)
                 {
-                    var curr_sensor = new Sensor()
+                    var currentSensor = new Sensor // naming!
                     {
                         Id = sensor.Id,
-                        ContainerId = CurrContainer.Id,
+                        ContainerId = currentContainer.Id,
                         Type = sensor.Type
                     };
-                    context.Sensors.Add(curr_sensor);
+                    context.Sensors.Add(currentSensor);
                 }
             }
             context.SaveChanges();

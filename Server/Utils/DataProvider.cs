@@ -9,11 +9,12 @@ namespace Server.Utils
     public interface IDataProvider
     {
         List<ContainerDTO> GetNewContainers(HardwareTree tree, Guid agentId, Guid? parentId);
+        //todo List<...> GetNewSensors(...);
     }
 
     public class DataProvider : IDataProvider
     {
-        IReadOnlyDataContext dbContext;
+        private readonly IReadOnlyDataContext dbContext;
 
         public DataProvider(IReadOnlyDataContext ctx)
         {

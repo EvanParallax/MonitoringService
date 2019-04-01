@@ -12,11 +12,11 @@ namespace Server.Utils
 
     public class DataReciever : IDataReciever
     {
-        private static HttpClient client = new HttpClient();
+        private static readonly HttpClient client = new HttpClient();
 
-        public async Task<Envelope> GetDataAsync(string Endpoint)
+        public async Task<Envelope> GetDataAsync(string endpoint) // naming!
         {
-            HttpResponseMessage response = client.GetAsync(Endpoint).Result;
+            HttpResponseMessage response = client.GetAsync(endpoint).Result;
             string responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Envelope>(responseBody);
         }

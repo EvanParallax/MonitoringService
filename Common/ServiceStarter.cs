@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class ServiceStarter
+    public class ServiceStarter // todo: refactoring
     {
         public static void Start(Action callback, string name)
         {

@@ -27,6 +27,7 @@ namespace Server.Utils
             dbContext.Dispose();
         }
 
+        // todo: add a call from BackWorker
         public void WriteSession()
         {
             foreach (var agent in dbContext.Agents)
@@ -57,6 +58,5 @@ namespace Server.Utils
             }
             dbContext.SaveChanges();
         }
-
     }
 }

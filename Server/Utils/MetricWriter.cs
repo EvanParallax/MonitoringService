@@ -10,7 +10,7 @@ namespace Server.Utils
 
     public class MetricWriter : IMetricWriter
     {
-        private IDataContext dataContext;
+        private readonly IDataContext dataContext;
 
         public MetricWriter(IDataContext ctx)
         {

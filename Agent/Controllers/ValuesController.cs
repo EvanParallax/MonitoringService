@@ -8,7 +8,7 @@ namespace Agent.Controllers
 {
     public class ValuesController : ApiController
     {
-        private ISensorWatcher watcher;
+        private readonly ISensorWatcher watcher;
 
         public ValuesController(ISensorWatcher sensorWatcher)
         {
@@ -18,8 +18,18 @@ namespace Agent.Controllers
         [HttpGet]
         public Envelope Get()
         {
-            var envelope = watcher.GetSensorsData();
-            return envelope;
+            var hardwareTree = watcher.GetSensorsData();
+
+            return new Envelope
+            {
+                Header = new Header
+                {
+                    AgentId = Guid.NewGuid(), // todo: remove AgentId
+                    AgentTime = DateTime.Now,
+                    ErrorMsg = hardwareTree == null ? "No data available" : ""
+                },
+                HardwareTree = hardwareTree
+            };
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Server.Controllers
             Agent item = new Agent()
             {
                 Id = Guid.NewGuid(),
-                CredId = new Guid(),
+                CredId = new Guid(), //todo: save credentials
                 Endpoint = agent.Endpoint,
                 OsType = agent.OsType,
                 AgentVersion = agent.AgentVersion
