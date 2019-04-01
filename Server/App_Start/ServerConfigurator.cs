@@ -17,7 +17,7 @@ namespace Server
                 .As<IDataContext>().As<IReadOnlyDataContext>();
 
 
-            builder.RegisterType<DataReciever>().As<IDataReciever>();
+            builder.RegisterType<DataReceiver>().As<IDataReceiver>();
             builder.RegisterType<DataProvider>().As<IDataProvider>();
             builder.RegisterType<HierarchyWriter>().As<IHierarchyWriter>();
             builder.RegisterType<MetricWriter>().As<IMetricWriter>();

@@ -8,12 +8,12 @@ namespace Server.Utils
     public class SessionWriter : IDisposable
     {
         private readonly IDataContext dbContext;
-        private readonly IDataReciever receiver;
+        private readonly IDataReceiver receiver;
         private readonly IDataProvider provider;
         private readonly IHierarchyWriter hierarchyWriter;
         private readonly IMetricWriter metricWriter;
 
-        public SessionWriter(IDataContext ctx, IDataReciever rcvr, IDataProvider prvdr, IHierarchyWriter hWriter, IMetricWriter mWriter)
+        public SessionWriter(IDataContext ctx, IDataReceiver rcvr, IDataProvider prvdr, IHierarchyWriter hWriter, IMetricWriter mWriter)
         {
             dbContext = ctx;
             receiver = rcvr;

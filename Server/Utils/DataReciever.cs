@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 
 namespace Server.Utils
 {
-    public interface IDataReciever
+    public interface IDataReceiver
     {
-        Task<Envelope> GetDataAsync(string Endpoint);
+        Task<Envelope> GetDataAsync(string endpoint);
     }
 
-    public class DataReciever : IDataReciever
+    public class DataReceiver : IDataReceiver
     {
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient();
 
-        public async Task<Envelope> GetDataAsync(string endpoint) // naming!
+        public async Task<Envelope> GetDataAsync(string endpoint)
         {
-            HttpResponseMessage response = client.GetAsync(endpoint).Result;
+            HttpResponseMessage response = Client.GetAsync(endpoint).Result;
             string responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Envelope>(responseBody);
         }
