@@ -26,17 +26,10 @@ namespace Server.Tests.Tests
         }
 
         [Test]
-        public void EmptyDBGoodTree_ReturnAllHwSensors()
+        public void EmptyDB_ReturnAllHwSensors()
         {
-            var expected = new List<SensorHW>();
-            expected.Add(new SensorHW("1", "cpu_temp", 35.4f));
-            expected.Add(new SensorHW("2", "gpu_temp", 83.2f));
-            expected.Add(new SensorHW("3", "mb_temp", 32.4f));
+            var expected = defaultHwTree.Sensors;
 
-            var tree = new HardwareTree();
-            tree.Sensors.Add(new SensorHW("1", "cpu_temp", 35.4f));
-            tree.Sensors.Add(new SensorHW("2", "gpu_temp", 83.2f));
-            tree.Sensors.Add(new SensorHW("3", "mb_temp", 32.4f));
 
             var contextMock = new Mock<IReadOnlyDataContext>(MockBehavior.Strict);
             contextMock.Setup(a => a.Containers).Returns((new Container[0]).AsQueryable());
@@ -45,18 +38,17 @@ namespace Server.Tests.Tests
 
             sut = new DataProvider(contextMock.Object);
 
-            var result = sut.GetNewContainers(tree, new Guid(), null).First();
+            List<SensorHW> result = new List<SensorHW>();
+            foreach (var item in sut.GetNewData(defaultHwTree, new Guid(), null).NewContainers)
+                result.AddRange(item.Sensors);
+
                 
-            Assert.That(result.Sensors, Is.EqualTo(expected));
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void GoodDbGoodTreeEquals_EmptyNewList()
+        public void DbDataEqualsTree_EmptyNewList()
         {
-            var tree = new HardwareTree();
-            tree.Sensors.Add(new SensorHW("1", "cpu_temp", 35.4f));
-            tree.Sensors.Add(new SensorHW("2", "gpu_temp", 83.2f));
-            tree.Sensors.Add(new SensorHW("3", "mb_temp", 32.4f));
 
             var containers = new List<Container>();
             containers.Add(new Container() { AgentId = new Guid(), Id = new Guid(), ParentContainerId = null });
@@ -74,7 +66,9 @@ namespace Server.Tests.Tests
 
             sut = new DataProvider(contextMock.Object);
 
-            var result = sut.GetNewContainers(tree, new Guid(), null);
+            List<SensorHW> result = new List<SensorHW>();
+            foreach (var item in sut.GetNewData(defaultHwTree, new Guid(), null).NewContainers)
+                result.AddRange(item.Sensors);
 
             Assert.That(result, Is.Empty);
         }
@@ -85,14 +79,10 @@ namespace Server.Tests.Tests
             var expected = new List<SensorHW>();
             expected.Add(new SensorHW("4", "winchester", 45.4f));
 
-            var tree = new HardwareTree();
-            tree.Sensors.Add(new SensorHW("1", "cpu_temp", 35.4f));
-            tree.Sensors.Add(new SensorHW("2", "gpu_temp", 83.2f));
-            tree.Sensors.Add(new SensorHW("3", "mb_temp", 32.4f));
 
             var anotherTree = new HardwareTree();
             anotherTree.Sensors.Add(new SensorHW("4", "winchester", 45.4f));
-            tree.Subhardware.Add(anotherTree);
+            defaultHwTree.Subhardware.Add(anotherTree);
 
             var containers = new List<Container>();
             containers.Add(new Container() { AgentId = new Guid(), Id = new Guid(), ParentContainerId = null });
@@ -110,9 +100,45 @@ namespace Server.Tests.Tests
 
             sut = new DataProvider(contextMock.Object);
 
-            var result = sut.GetNewContainers(tree, new Guid(), null).First();
+            List<SensorHW> result = new List<SensorHW>();
+            foreach (var item in sut.GetNewData(defaultHwTree, new Guid(), null).NewContainers)
+                result.AddRange(item.Sensors);
 
-            Assert.That(result.Sensors, Is.EqualTo(expected));
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void OneSensorDifference_NewSensorList()
+        {
+            var expected = new List<SensorHW>
+            {
+                new SensorHW("5", "Space", 45.4f)
+            };
+
+
+            defaultHwTree.Sensors.Add(new SensorHW("5", "Space", 45.4f));
+
+            var containers = new List<Container>();
+            containers.Add(new Container() { AgentId = new Guid(), Id = new Guid(), ParentContainerId = null });
+
+            var sensors = new List<Sensor>();
+            sensors.Add(new Sensor() { Id = "1", Type = "cpu_temp", ContainerId = new Guid() });
+            sensors.Add(new Sensor() { Id = "2", Type = "gpu_temp", ContainerId = new Guid() });
+            sensors.Add(new Sensor() { Id = "3", Type = "mb_temp", ContainerId = new Guid() });
+
+
+            var contextMock = new Mock<IReadOnlyDataContext>(MockBehavior.Strict);
+            contextMock.Setup(a => a.Containers).Returns(containers.AsQueryable());
+            contextMock.Setup(a => a.Sensors).Returns(sensors.AsQueryable());
+            contextMock.Setup(a => a.Agents).Returns((new Agent[0]).AsQueryable());
+
+            sut = new DataProvider(contextMock.Object);
+
+            List<SensorHW> result = new List<SensorHW>();
+            foreach (var item in sut.GetNewData(defaultHwTree, new Guid(), null).NewSensors)
+                result.Add(item.Sensor);
+
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

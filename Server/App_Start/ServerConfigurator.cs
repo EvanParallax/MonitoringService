@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Web.Http;
-using Autofac;
-using Autofac.Integration.WebApi;
+﻿using Autofac;
 using Common;
 using Server.Controllers;
 using Server.Utils;
@@ -22,25 +19,12 @@ namespace Server
             builder.RegisterType<HierarchyWriter>().As<IHierarchyWriter>();
             builder.RegisterType<MetricWriter>().As<IMetricWriter>();
             builder.RegisterType<SessionWriter>().AsSelf();
-            builder.RegisterType<ServerController>().InstancePerRequest();
+            builder.RegisterType<AgentController>().InstancePerRequest();
+            builder.RegisterType<MetricsController>().InstancePerRequest();
             var config = builder.Build();
             var writer = config.Resolve<SessionWriter>();
-            //ServiceStarter.Start(writer.WriteSession, "WriteDB");
+            ServiceStarter.Start(writer.WriteSession, "WriteDB");
             return config;
-
-
-            // Common part
-            //var config = GlobalConfiguration.Configuration;
-            //builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).SingleInstance();
-            //var container = builder.Build();
-            //config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
-            //
-
-            // Another class
-            //var writer = container.Resolve<SessionWriter>();
-            //SessionWriter writer = new SessionWriter(ctx, rcvr, provider, hWriter, mWriter);
-            //BackWorker worker = new BackWorker("WritingProcess", writer.WriteSession, 2000);
-
         }
     }
 }

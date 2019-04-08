@@ -158,8 +158,11 @@
     <Compile Include="App_Start\ServerConfigurator.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Controllers\MetricsController.cs" />
+    <Compile Include="Controllers\AgentController.cs" />
     <Compile Include="DTOs\ContainerDTO.cs" />
+    <Compile Include="DTOs\NewDataDTO.cs" />
+    <Compile Include="DTOs\NewSensorDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

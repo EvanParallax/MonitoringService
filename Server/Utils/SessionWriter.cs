@@ -46,12 +46,12 @@ namespace Server.Utils
 
                 if(currEnvelope.HardwareTree != null)
                 {
-                    List<ContainerDTO> newContainers = provider.GetNewContainers(
+                    NewDataDTO data = provider.GetNewData(
                         currEnvelope.HardwareTree, 
                         agent.Id,
                         null);
 
-                    hierarchyWriter.WriteContainers(newContainers, agent);
+                    hierarchyWriter.Write(data, agent);
 
                     metricWriter.WriteMetrics(currEnvelope.HardwareTree, currAgentSession.Id);
                 }

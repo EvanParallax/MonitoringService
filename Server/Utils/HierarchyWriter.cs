@@ -6,7 +6,7 @@ namespace Server.Utils
 {
     public interface IHierarchyWriter
     {
-        void WriteContainers(IEnumerable<ContainerDTO> containers, Agent agent);
+        void Write(NewDataDTO data, Agent agent);
     }
 
     public class HierarchyWriter : IHierarchyWriter
@@ -18,14 +18,25 @@ namespace Server.Utils
             context = ctx;
         }
 
-        public void WriteContainers(IEnumerable<ContainerDTO> containers, Agent agent)
+        public void Write(NewDataDTO data, Agent agent)
         {
-            foreach (var container in containers)
+            foreach (var item in data.NewSensors)
+            {
+                var currentSensor = new Sensor // naming!
+                {
+                    Id = item.Sensor.Id,
+                    ContainerId = item.ContainerId,
+                    Type = item.Sensor.Type
+                };
+                context.Sensors.Add(currentSensor);
+            }
+
+            foreach (var container in data.NewContainers)
             {
                 var currentContainer = new Container // naming!
                 {
                     AgentId = agent.Id,
-                    Id = Guid.NewGuid(),
+                    Id = container.ContainerId,
                     ParentContainerId = container.ParentId
                 };
 
