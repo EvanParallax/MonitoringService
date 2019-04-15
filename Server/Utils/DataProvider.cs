@@ -69,7 +69,11 @@ namespace Server.Utils
             var dbcontainers = dbContext.Containers.Where(p => p.AgentId == agentId && p.ParentContainerId == parentId);
 
             if (dbcontainers.Count() == 0)
+            {
                 data.NewContainers.AddRange(ConvertToList(tree, parentId));
+                return;
+            }
+                
 
             Guid resultId = Guid.Empty;
             bool needNewContainer = true;
@@ -85,14 +89,6 @@ namespace Server.Utils
                         needNewContainer = false;
                         break;
                     }
-
-                    // if (!CompareNodes(container.Id, tree))
-                    //   data.NewContainers.AddRange(ConvertToList(tree, parentId));
-                    // else
-                    //  data.NewSensors.AddRange(GetNewSensors(tree, container.Id));
-
-                    //foreach (var sh in tree.Subhardware)
-                        //GetNewContainers(sh, agentId, resultId, data);
                 }
             }
 
