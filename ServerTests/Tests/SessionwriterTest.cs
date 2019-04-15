@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Common;
+using Moq;
 using NUnit.Framework;
 using Server.Utils;
 using ServerTests.Utils;
@@ -17,10 +18,52 @@ namespace ServerTests.Tests
 
         private Mock<IDataContext> fakeContext;
 
+        private Mock<IDataReceiver> fakeReceiver;
+
+
+        private Envelope Func()
+        {
+            Random rand = new Random();
+
+            var tree = new HardwareTree();
+            tree.Sensors.Add(new SensorHW("1", "PCH", rand.Next(30, 50)));
+
+            var cpuTree = new HardwareTree();
+            cpuTree.Sensors.Add(new SensorHW("2", "cpu_temp", rand.Next(30, 80)));
+
+            var gpuTree = new HardwareTree();
+            gpuTree.Sensors.Add(new SensorHW("3", "gpu_temp", rand.Next(40, 88)));
+
+            var hddTree = new HardwareTree();
+            hddTree.Sensors.Add(new SensorHW("4", "hdd_temp", rand.Next(25, 35)));
+            var hdddTree = new HardwareTree();
+            hdddTree.Sensors.Add(new SensorHW("66", "hd2d_temp", rand.Next(25, 35)));
+
+            tree.Subhardware.Add(cpuTree);
+            tree.Subhardware.Add(gpuTree);
+            tree.Subhardware.Add(hddTree);
+            tree.Subhardware.Add(hdddTree);
+
+            var envelope = new Envelope
+            {
+                Header = new Header
+                {
+                    AgentId = Guid.NewGuid(),
+                    AgentTime = DateTime.Now,
+                    ErrorMsg = tree == null ? "No data available" : ""
+                },
+                HardwareTree = tree
+            };
+
+            return envelope;
+        }
+
+
         [SetUp]
         public void CommonParts()
         {
-            FakeDbSet<Agent> agents = new FakeDbSet<Agent>();
+
+            FakeDbSet <Agent> agents = new FakeDbSet<Agent>();
             FakeDbSet<Credential> creds = new FakeDbSet<Credential>();
             FakeDbSet<Container> containers = new FakeDbSet<Container>();
             FakeDbSet<Sensor> sensors = new FakeDbSet<Sensor>();
@@ -34,6 +77,9 @@ namespace ServerTests.Tests
             fakeContext.Setup(a => a.Metrics).Returns(metrics);
             fakeContext.Setup(a => a.Sessions).Returns(sessions);
             fakeContext.Setup(a => a.Credentials).Returns(creds);
+
+            fakeReceiver = new Mock<IDataReceiver>();
+            fakeReceiver.Setup(a => a.GetDataAsync(It.IsAny<string>())).Returns(new Task<Envelope>(Func));
 
             fakeContext.Object.Agents.Add(new Agent()
             {
@@ -50,7 +96,7 @@ namespace ServerTests.Tests
         [Test]
         public void EmptyDB_WriteAll()
         {
-            sut = new SessionWriter(fakeContext.Object, 
+            sut = new SessionWriter(fakeContext.Object,
                                     new DataReceiver(), 
                                     new DataProvider(fakeContext.Object), 
                                     new HierarchyWriter(fakeContext.Object), 
@@ -68,7 +114,7 @@ namespace ServerTests.Tests
         public void NotEmptyDB_WriteSessionAndMetrics()
         {
             sut = new SessionWriter(fakeContext.Object,
-                                    new DataReceiver(),
+                                    new DataReceiver(), 
                                     new DataProvider(fakeContext.Object),
                                     new HierarchyWriter(fakeContext.Object),
                                     new MetricWriter(fakeContext.Object));
