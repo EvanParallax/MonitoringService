@@ -4,13 +4,13 @@ using Server.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Server.Utils
 {
     public interface IDataProvider
     {
         NewDataDTO GetNewData(HardwareTree tree, Guid agentId, Guid? parentId);
-        //todo List<...> GetNewSensors(...);
     }
 
     public class DataProvider : IDataProvider
@@ -27,37 +27,52 @@ namespace Server.Utils
 
         private List<NewSensorDTO> GetNewSensors(HardwareTree tree, Guid containerId)
         {
-            logger.Debug(" ");
-            logger.Debug("Starting Converting new sensors to list  method");
+            logger.Trace($"Entering {nameof(GetNewSensors)}");
+            logger.Debug($"Current parent id = '{containerId}'");
 
-            var sensors = dbContext.Sensors.Where(p => p.ContainerId == containerId);
+            var sensors = dbContext.Sensors.Where(p => p.ContainerId == containerId).ToArray();
+            foreach (var sensor in sensors)
+                logger.Debug($"Found sensor '{sensor.ContainerId}:{sensor.Id}' type: {sensor.Type} in database");
 
             var buffTree = (from element in tree.Sensors
                             select element.Type );
+            foreach (var sensor in buffTree)
+                logger.Debug($"Found sensor '{sensor}' in tree");
 
             var buffDb = (from element in sensors
                           select element.Type).AsEnumerable();
 
             var items = buffTree.Except(buffDb).AsEnumerable();
+            foreach (var sensor in buffTree)
+                logger.Debug($"Found new sensor '{sensor}' in tree");
 
             List<NewSensorDTO> newSensors = new List<NewSensorDTO>();
 
             foreach (var item in tree.Sensors)
-                if(items.Contains(item.Type))
-                    newSensors.Add(new NewSensorDTO()
-                    {
-                        ContainerId = containerId,
-                        Sensor = item
-                    });
-            logger.Debug("Ending Converting new containers to list  method");
-            logger.Debug(" ");
+            {
+                if (items.Contains(item.Type))
+                {
+                        logger.Info($"New item '{item.Id}' will be added to DB");
+                        newSensors.Add(new NewSensorDTO()
+                        {
+                            ContainerId = containerId,
+                            Sensor = item
+                        });
+                }
+                else
+                {
+                        logger.Debug($"Item '{item.Id}' already exists");
+                }
+            }
+
+            logger.Trace($"Exiting {nameof(GetNewSensors)}");
             return newSensors;
         }
 
         private List<ContainerDTO> ConvertToList(HardwareTree tree, Guid? parentId)
         {
-            logger.Debug(" ");
-            logger.Debug("Starting Converting new containers to list  method");
+            logger.Trace($"Entering {new StackTrace().GetFrame(0).GetMethod().Name}");
+            logger.Debug($"Parent id = '{parentId}'");
 
             List<ContainerDTO> containers = new List<ContainerDTO>();
 
@@ -69,35 +84,33 @@ namespace Server.Utils
             };
 
             containers.Add(container);
+            logger.Info($"Adding container '{container.ContainerId}' to list");
+            logger.Debug($"\twith sensors '{string.Join(",", container.Sensors.Select(s => s.Id))}'");
 
             foreach (var subhardware in tree.Subhardware)
             {
-                logger.Debug("Recursive call");
                 containers.AddRange(ConvertToList(subhardware, container.ContainerId));
             }
 
-            logger.Debug("Ending Converting new containers to list  method");
-            logger.Debug(" ");
+            logger.Trace($"Exiting {new StackTrace().GetFrame(0).GetMethod().Name}");
             return containers;
         }
 
         private void GetNewContainers(HardwareTree tree, Guid agentId, Guid? parentId,NewDataDTO data)
         {
-            logger.Debug(" ");
-            logger.Debug("Starting GetNewContainers method");
+            logger.Trace($"Entering {new StackTrace().GetFrame(0).GetMethod().Name}");
 
             var dbcontainers = dbContext.Containers.Where(p => p.AgentId == agentId && p.ParentContainerId == parentId);
 
             if (dbcontainers.Count() == 0)
             {
-                logger.Debug("Empty DbSet Containers, creating new containers ");
+                logger.Info("Empty DbSet Containers, creating new containers ");
                 
                 data.NewContainers.AddRange(ConvertToList(tree, parentId));
 
-                return;
+                logger.Trace($"Exiting {new StackTrace().GetFrame(0).GetMethod().Name}");
 
-                logger.Debug("Ending GetNewContainers method");
-                logger.Debug(" ");
+                return;
             }
                 
 
@@ -106,11 +119,9 @@ namespace Server.Utils
 
             foreach (var container in dbcontainers)
             {
-                logger.Debug("Comparing containers");
                 if (container.AgentId == agentId && container.ParentContainerId == parentId)
                 {
-                    logger.Debug("Need new Container: {0}", CompareNodes(container.Id, tree));
-                    if (CompareNodes(container.Id, tree))
+                    if (NotNeedNewContainer(container.Id, tree))
                     {
                         data.NewSensors.AddRange(GetNewSensors(tree, container.Id));
                         resultId = container.Id;
@@ -129,16 +140,14 @@ namespace Server.Utils
 
             foreach (var sh in tree.Subhardware)
             {
-                logger.Debug("Recursive call");
                 GetNewContainers(sh, agentId, resultId, data);
             }
 
-            logger.Debug("Ending GetNewContainers method");
-            logger.Debug(" ");
+            logger.Trace($"Exiting {new StackTrace().GetFrame(0).GetMethod().Name}");
 
         }
 
-        private bool CompareNodes(Guid id, HardwareTree tree)
+        private bool NotNeedNewContainer(Guid id, HardwareTree tree)
         {
             var sensors = dbContext.Sensors.Where(p => p.ContainerId == id).AsEnumerable();
 
@@ -148,15 +157,15 @@ namespace Server.Utils
             var buffDb = (from element in sensors
                           select new { element.Type, element.Id }).AsEnumerable();
 
-            if(buffTree.Intersect(buffDb).Count() == 0)
-                return false;
-            return true;
+            var result = !buffTree.Intersect(buffDb).Any();
+            logger.Debug($"{nameof(NotNeedNewContainer)} result is {result}");
+            return !result;
         }
 
         public NewDataDTO GetNewData(HardwareTree tree, Guid agentId, Guid? parentId)
         {
-            logger.Debug(" ");
-            logger.Debug("Starting GetNewData method");
+            logger.Trace($"Entering {new StackTrace().GetFrame(0).GetMethod().Name}");
+
             NewDataDTO data = new NewDataDTO()
             {
                 NewSensors = new List<NewSensorDTO>(),
@@ -170,11 +179,11 @@ namespace Server.Utils
 
             foreach (var item in data.NewContainers)
             {
-                logger.Debug("New Container id {0}, pareint id {1}", item.ContainerId, item.ParentId);
+                logger.Info("New Container id {0}, pareint id {1}", item.ContainerId, item.ParentId);
 
                 foreach (var sensor in item.Sensors)
                 {
-                    logger.Debug("Sensor id {0}, type {1}, value {2}", 
+                    logger.Info("Sensor id {0}, type {1}, value {2}", 
                         sensor.Id, 
                         sensor.Type,
                         sensor.Value);
@@ -183,7 +192,7 @@ namespace Server.Utils
 
             foreach (var sensor in data.NewSensors)
             {
-                logger.Debug("Sensor id {0}, pareint id {1}, value {2}, container id {3}",
+                logger.Info("Sensor id {0}, pareint id {1}, value {2}, container id {3}",
                     sensor.Sensor.Id,
                     sensor.Sensor.Type,
                     sensor.Sensor.Value, 
@@ -191,13 +200,12 @@ namespace Server.Utils
             }
 
             if (data.NewContainers.Count == 0)
-                logger.Debug("No new containers");
+                logger.Info("No new containers");
 
             if (data.NewSensors.Count == 0)
-                logger.Debug("No new sensors");
+                logger.Info("No new sensors");
 
-            logger.Debug("Ending GetNewData method");
-            logger.Debug(" ");
+            logger.Trace($"Exiting {new StackTrace().GetFrame(0).GetMethod().Name}");
 
             return data;
 
