@@ -36,14 +36,15 @@ namespace Server.Utils
 
             var buffTree = (from element in tree.Sensors
                             select element.Type );
-            foreach (var sensor in buffTree)
+            var enumerable = buffTree as string[] ?? buffTree.ToArray();
+            foreach (var sensor in enumerable)
                 logger.Debug($"Found sensor '{sensor}' in tree");
 
             var buffDb = (from element in sensors
                           select element.Type).AsEnumerable();
 
-            var items = buffTree.Except(buffDb).AsEnumerable();
-            foreach (var sensor in buffTree)
+            var items = enumerable.Except(buffDb).AsEnumerable();
+            foreach (var sensor in enumerable)
                 logger.Debug($"Found new sensor '{sensor}' in tree");
 
             List<NewSensorDTO> newSensors = new List<NewSensorDTO>();

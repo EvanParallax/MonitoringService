@@ -76,6 +76,13 @@ namespace ServerTests.Tests
             fakeContext.Setup(a => a.Sessions).Returns(sessions);
             fakeContext.Setup(a => a.Credentials).Returns(creds);
 
+            fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Containers).Returns(containers);
+            fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Sensors).Returns(sensors);
+            fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Agents).Returns(agents);
+            fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Metrics).Returns(metrics);
+            fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Sessions).Returns(sessions);
+            fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Credentials).Returns(creds);
+
             fakeReceiver = new Mock<IDataReceiver>();
             fakeReceiver.Setup(a => a.GetDataAsync(It.IsAny<string>())).Returns(new Task<Envelope>(Func));
 
@@ -118,9 +125,8 @@ namespace ServerTests.Tests
                                     new MetricWriter(fakeContext.Object));
 
             sut.WriteSession();
-            //fakeContext.Object.SaveChanges();
+
             sut.WriteSession();
-            //fakeContext.Object.SaveChanges();
 
             Assert.That(fakeContext.Object.Sessions.Count, Is.EqualTo(2));
             Assert.That(fakeContext.Object.Containers.Count, Is.EqualTo(5));
