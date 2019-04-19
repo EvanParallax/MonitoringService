@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class HardwareTree
+    public class HardwareTree : ILoggerFormat
     {
+        public string DeviceName { get; set; }
+
         public List<HardwareTree> Subhardware { get; set; }
 
         public List<SensorHW> Sensors { get; set; }
@@ -16,6 +18,11 @@ namespace Common
         {
             Subhardware = new List<HardwareTree>();
             Sensors = new List<SensorHW>();
+        }
+
+        public string TologFormat()
+        {
+            throw new NotImplementedException();
         }
     }
 }

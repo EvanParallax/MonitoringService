@@ -175,9 +175,9 @@
     <Compile Include="Entities\Agent.cs" />
     <Compile Include="Entities\Container.cs" />
     <Compile Include="Entities\Credential.cs" />
-    <Compile Include="Migrations\201903261929442_InitialCreate.cs" />
-    <Compile Include="Migrations\201903261929442_InitialCreate.Designer.cs">
-      <DependentUpon>201903261929442_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201904190834162_ReInitial.cs" />
+    <Compile Include="Migrations\201904190834162_ReInitial.Designer.cs">
+      <DependentUpon>201904190834162_ReInitial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Utils\DataProvider.cs" />
@@ -216,8 +216,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903261929442_InitialCreate.resx">
-      <DependentUpon>201903261929442_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201904190834162_ReInitial.resx">
+      <DependentUpon>201904190834162_ReInitial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

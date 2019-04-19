@@ -79,6 +79,7 @@ namespace Server.Utils
 
             var container = new ContainerDTO()
             {
+                DeviceName = tree.DeviceName,
                 ContainerId = Guid.NewGuid(),
                 ParentId = parentId,
                 Sensors = tree.Sensors
@@ -150,6 +151,11 @@ namespace Server.Utils
 
         private bool NotNeedNewContainer(Guid id, HardwareTree tree)
         {
+            //var container = dbContext.Containers.First(p => p.Id == id);
+
+            //if (container.DeviceName == tree.DeviceName)
+            //    return true;
+
             var sensors = dbContext.Sensors.Where(p => p.ContainerId == id).AsEnumerable();
 
             var buffTree = (from element in tree.Sensors

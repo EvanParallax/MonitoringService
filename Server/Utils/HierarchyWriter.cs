@@ -35,6 +35,7 @@ namespace Server.Utils
             {
                 var currentContainer = new Container // naming!
                 {
+                    DeviceName = container.DeviceName,
                     AgentId = agent.Id,
                     Id = container.ContainerId,
                     ParentContainerId = container.ParentId

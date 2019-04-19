@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class SensorHW : ISensorHW
+    public class SensorHW : ISensorHW, ILoggerFormat
     {
         public string Id { get ; }
         public string Type { get; }
@@ -38,6 +38,11 @@ namespace Common
             {
                 return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (Type != null ? Type.GetHashCode() : 0);
             }
+        }
+
+        public string TologFormat()
+        {
+            return $"Senor id: {Id}, Sensor type: {Type}, sensor value: {Value}";
         }
     }
 }

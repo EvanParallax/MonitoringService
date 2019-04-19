@@ -9,6 +9,7 @@ namespace Server.DTOs
 {
     public class ContainerDTO
     {
+        public string DeviceName { get; set; }
         public Guid ContainerId { get; set; }
         public Guid? ParentId { get; set; }
         public List<SensorHW> Sensors { get; set; }
