@@ -62,7 +62,6 @@ namespace Agent.Utils
             {
                 tree.Subhardware.Add(GetInfoRecursive(hardware));
             }
-            computer.Close();
             return tree;
         }
 

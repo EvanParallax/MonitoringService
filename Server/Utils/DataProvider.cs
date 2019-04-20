@@ -151,22 +151,16 @@ namespace Server.Utils
 
         private bool NotNeedNewContainer(Guid id, HardwareTree tree)
         {
-            //var container = dbContext.Containers.First(p => p.Id == id);
+            var result = false;
 
-            //if (container.DeviceName == tree.DeviceName)
-            //    return true;
+            var container = dbContext.Containers.First(p => p.Id == id);
 
-            var sensors = dbContext.Sensors.Where(p => p.ContainerId == id).AsEnumerable();
+            if (container.DeviceName == tree.DeviceName)
+                result = true;
 
-            var buffTree = (from element in tree.Sensors
-                          select new { element.Type, element.Id });
-
-            var buffDb = (from element in sensors
-                          select new { element.Type, element.Id }).AsEnumerable();
-
-            var result = !buffTree.Intersect(buffDb).Any();
+            
             logger.Debug($"{nameof(NotNeedNewContainer)} result is {result}");
-            return !result;
+            return result;
         }
 
         public NewDataDTO GetNewData(HardwareTree tree, Guid agentId, Guid? parentId)
