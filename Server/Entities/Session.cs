@@ -9,6 +9,8 @@ namespace Server.Utils
     public class Session
     {
         public Guid Id { get; set; }
+
+
         public Guid AgentId { get; set; }
         public DateTime AgentTime { get; set; }
         public DateTime ServerTime { get; set; }

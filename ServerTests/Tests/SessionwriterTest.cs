@@ -111,8 +111,8 @@ namespace ServerTests.Tests
 
             Assert.That(fakeContext.Object.Sessions.Count, Is.EqualTo(1));
             Assert.That(fakeContext.Object.Containers.Count, Is.EqualTo(5));
-            Assert.That(fakeContext.Object.Sensors.Count, Is.EqualTo(5));
-            Assert.That(fakeContext.Object.Metrics.Count, Is.EqualTo(5));
+            Assert.That(fakeContext.Object.Sensors.Count, Is.EqualTo(19));
+            Assert.That(fakeContext.Object.Metrics.Count, Is.EqualTo(19));
         }
 
         [Test]
@@ -130,8 +130,8 @@ namespace ServerTests.Tests
 
             Assert.That(fakeContext.Object.Sessions.Count, Is.EqualTo(2));
             Assert.That(fakeContext.Object.Containers.Count, Is.EqualTo(5));
-            Assert.That(fakeContext.Object.Sensors.Count, Is.EqualTo(5));
-            Assert.That(fakeContext.Object.Metrics.Count, Is.EqualTo(10));
+            Assert.That(fakeContext.Object.Sensors.Count, Is.EqualTo(19));
+            Assert.That(fakeContext.Object.Metrics.Count, Is.EqualTo(38));
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Common;
 using Server.DTOs;
 using System;
-using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Server.Utils
 {
@@ -27,17 +28,22 @@ namespace Server.Utils
             dbContext.Dispose();
         }
 
-        // todo: add a call from BackWorker
         public void WriteSession()
         {
             foreach (var agent in dbContext.Agents)
             {
+                if(!agent.IsEnabled)
+                    continue;
+
+                var requestTime = DateTime.Now;
                 Envelope currEnvelope = receiver.GetDataAsync(agent.Endpoint).Result;
+                currEnvelope.Header.RequestTime = requestTime;
+
                 Session currAgentSession = new Session()
                 {
                     AgentId = agent.Id,
                     Id = Guid.NewGuid(),
-                    ServerTime = DateTime.Now,
+                    ServerTime = currEnvelope.Header.RequestTime,
                     AgentTime = currEnvelope.Header.AgentTime,
                     Error = currEnvelope.Header.ErrorMsg
                 };
@@ -46,6 +52,26 @@ namespace Server.Utils
 
                 if(currEnvelope.HardwareTree != null)
                 {
+                    var delay = currEnvelope.
+                        Header.RequestTime.
+                        Subtract(currEnvelope.Header.AgentTime).
+                        Milliseconds;
+
+                    if (delay <= 100)
+                    {
+                        var answerTime = dbContext.AnswerTimes.Where(at => at.Delay == 100).FirstOrDefault();
+                        if (answerTime == null)
+                        {
+                            answerTime = new AnswerTime();
+                            answerTime.Delay = 100;
+                            answerTime.Id = Guid.NewGuid();
+                            answerTime.Agents.Add(agent);
+                        }
+                        answerTime.Agents.Add(agent);
+                    }
+
+                   
+
                     NewDataDTO data = provider.GetNewData(
                         currEnvelope.HardwareTree, 
                         agent.Id,

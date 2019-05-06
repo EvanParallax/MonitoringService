@@ -10,8 +10,16 @@ namespace Server.Utils
     {
         public Guid Id { get; set; }
         public Guid CredId { get; set; }
+        public bool IsEnabled { get; set; }
         public string Endpoint { get; set; }
         public string OsType { get; set; }
         public string AgentVersion { get; set; }
+
+        public ICollection<AnswerTime> Answers { get; set; }
+
+        public Agent()
+        {
+            Answers = new List<AnswerTime>();
+        }
     }
 }

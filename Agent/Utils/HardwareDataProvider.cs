@@ -26,7 +26,6 @@ namespace Agent.Utils
     public interface IHardwareDataProvider : IDisposable
     {
         HardwareTree GetSystemInfo();
-        new void Dispose();
     }
 
     public class HardwareDataProvider : IHardwareDataProvider

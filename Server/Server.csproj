@@ -169,6 +169,7 @@
     <Compile Include="DTOs\ContainerDTO.cs" />
     <Compile Include="DTOs\NewDataDTO.cs" />
     <Compile Include="DTOs\NewSensorDTO.cs" />
+    <Compile Include="Entities\AnswerTime.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -178,6 +179,18 @@
     <Compile Include="Migrations\201904190834162_ReInitial.cs" />
     <Compile Include="Migrations\201904190834162_ReInitial.Designer.cs">
       <DependentUpon>201904190834162_ReInitial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905060925175_AnswersTable.cs" />
+    <Compile Include="Migrations\201905060925175_AnswersTable.Designer.cs">
+      <DependentUpon>201905060925175_AnswersTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905060935376_AnswerTimeTable.cs" />
+    <Compile Include="Migrations\201905060935376_AnswerTimeTable.Designer.cs">
+      <DependentUpon>201905060935376_AnswerTimeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.cs" />
+    <Compile Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.Designer.cs">
+      <DependentUpon>201905061253442_RepairAndAgentFieldIsEnabled.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Utils\DataProvider.cs" />
@@ -218,6 +231,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201904190834162_ReInitial.resx">
       <DependentUpon>201904190834162_ReInitial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905060925175_AnswersTable.resx">
+      <DependentUpon>201905060925175_AnswersTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905060935376_AnswerTimeTable.resx">
+      <DependentUpon>201905060935376_AnswerTimeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.resx">
+      <DependentUpon>201905061253442_RepairAndAgentFieldIsEnabled.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
