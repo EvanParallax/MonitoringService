@@ -57,7 +57,7 @@ namespace Server.Controllers
             ctx.SaveChanges();
         }
 
-        [HttpPost]
+        [HttpPut]
         public void EnableAgent(string endpoint)
         {
             var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
@@ -65,7 +65,7 @@ namespace Server.Controllers
                 agent.IsEnabled = true;
         }
 
-        [HttpPost]
+        [HttpPut]
         public void DisableAgent(string endpoint)
         {
             var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
@@ -73,10 +73,10 @@ namespace Server.Controllers
                 agent.IsEnabled = false;
         }
 
-        [HttpPost]
+        [HttpDelete]
         public void DeleteAgent(string endpoint)
         {
-            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
+            var agent = ctx.Agents.Where( a => a.Endpoint == endpoint).FirstOrDefault();
             if(agent != null)
                 ctx.Agents.Remove(agent);
             else

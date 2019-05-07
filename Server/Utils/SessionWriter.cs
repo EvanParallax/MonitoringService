@@ -53,9 +53,8 @@ namespace Server.Utils
                 if(currEnvelope.HardwareTree != null)
                 {
                     var delay = currEnvelope.
-                        Header.RequestTime.
-                        Subtract(currEnvelope.Header.AgentTime).
-                        Milliseconds;
+                        Header.RequestTime.Millisecond -
+                        currEnvelope.Header.AgentTime.Millisecond;
 
                     if (delay <= 100)
                     {
@@ -68,6 +67,7 @@ namespace Server.Utils
                             answerTime.Agents.Add(agent);
                         }
                         answerTime.Agents.Add(agent);
+                        dbContext.AnswerTimes.Add(answerTime);
                     }
 
                    

@@ -16,19 +16,20 @@ namespace Server.Controllers
             this.ctx = ctx;
         }
 
+        [HttpGet]
         public IEnumerable<MetricDTO> GetMetrics(string id)
         {
             Guid agentId = new Guid(id);
-            var result = from Agent in ctx.Agents
-                         where Agent.Id == agentId
-                         join Session in ctx.Sessions on Agent.Id equals Session.AgentId
-                         join Metric in ctx.Metrics on Session.Id equals Metric.SessionId
-                         join Sensor in ctx.Sensors on Metric.SensorId equals Sensor.Id
+            var result = from agent in ctx.Agents
+                         where agent.Id == agentId
+                         join session in ctx.Sessions on agent.Id equals session.AgentId
+                         join metric in ctx.Metrics on session.Id equals metric.SessionId
+                         join sensor in ctx.Sensors on metric.SensorId equals sensor.Id
                          select new MetricDTO()
                          {
-                             Session = Session.AgentTime,
-                             Stype = Sensor.Type,
-                             Svalue = Metric.Value
+                             Session = session.AgentTime,
+                             Stype = sensor.Type,
+                             Svalue = metric.Value
                          };
 
             return result.AsEnumerable();
