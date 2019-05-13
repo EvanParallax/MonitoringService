@@ -8,7 +8,8 @@ namespace Common
 {
     public class MetricDTO
     {
-        public DateTime Session { get; set; } // replace with SessionId?
+        public DateTime Session { get; set; } 
+        public int Delay { get; set; }
         public string Stype { get; set; }
         public float Svalue { get; set; }
     }

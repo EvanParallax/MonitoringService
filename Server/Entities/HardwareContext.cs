@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Entities;
+using System;
 using System.Data.Entity;
 using System.Linq;
 
@@ -12,7 +13,8 @@ namespace Server.Utils
         IQueryable<Metric> Metrics { get; }
         IQueryable<Sensor> Sensors { get; }
         IQueryable<Session> Sessions { get; }
-        IQueryable<AnswerTime> AnswerTimes { get; }
+        IQueryable<Delay> Delays { get; }
+        IQueryable<AgentDelay> AgentDelays { get; }
     }
 
     public interface IDataContext : IReadOnlyDataContext
@@ -23,7 +25,8 @@ namespace Server.Utils
         new IDbSet<Metric> Metrics { get; set; }
         new IDbSet<Sensor> Sensors { get; set; }
         new IDbSet<Session> Sessions { get; set; }
-        new IDbSet<AnswerTime> AnswerTimes { get; set;}
+        new IDbSet<Delay> Delays { get; set;}
+        new IDbSet<AgentDelay> AgentDelays { get; set; }
 
         int SaveChanges();
     }
@@ -48,13 +51,19 @@ namespace Server.Utils
         IQueryable<Session> IReadOnlyDataContext.Sessions => Sessions;
         public IDbSet<Session> Sessions { get; set; }
 
-        IQueryable<AnswerTime> IReadOnlyDataContext.AnswerTimes => AnswerTimes;
-        public IDbSet<AnswerTime> AnswerTimes { get; set; }
+        IQueryable<Delay> IReadOnlyDataContext.Delays => Delays;
+        public IDbSet<Delay> Delays { get; set; }
+
+        IQueryable<AgentDelay> IReadOnlyDataContext.AgentDelays => AgentDelays;
+        public IDbSet<AgentDelay> AgentDelays { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Metric>()
                 .HasKey(c => new { c.SessionId, c.SensorId });
+
+            modelBuilder.Entity<AgentDelay>()
+                .HasKey(c => new { c.AgentId, c.Date });
         }
     }
 

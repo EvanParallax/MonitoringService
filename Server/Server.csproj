@@ -169,7 +169,8 @@
     <Compile Include="DTOs\ContainerDTO.cs" />
     <Compile Include="DTOs\NewDataDTO.cs" />
     <Compile Include="DTOs\NewSensorDTO.cs" />
-    <Compile Include="Entities\AnswerTime.cs" />
+    <Compile Include="Entities\AgentDelay.cs" />
+    <Compile Include="Entities\Delay.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -191,6 +192,10 @@
     <Compile Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.cs" />
     <Compile Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.Designer.cs">
       <DependentUpon>201905061253442_RepairAndAgentFieldIsEnabled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905111302110_FinalSQLLab.cs" />
+    <Compile Include="Migrations\201905111302110_FinalSQLLab.Designer.cs">
+      <DependentUpon>201905111302110_FinalSQLLab.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Utils\DataProvider.cs" />
@@ -240,6 +245,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.resx">
       <DependentUpon>201905061253442_RepairAndAgentFieldIsEnabled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905111302110_FinalSQLLab.resx">
+      <DependentUpon>201905111302110_FinalSQLLab.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
