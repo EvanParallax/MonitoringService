@@ -12,7 +12,6 @@ namespace Common
         public DateTime AgentTime { get; set; }
         public DateTime RequestTime { get; set; }
         public string ErrorMsg { get; set; }
-        public int Delay { get; set; }
     }
     public class Envelope
     {

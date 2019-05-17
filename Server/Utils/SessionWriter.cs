@@ -1,8 +1,8 @@
 ﻿using Common;
 using Server.DTOs;
-using Server.Entities;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Server.Utils
 {
@@ -52,23 +52,26 @@ namespace Server.Utils
 
                 if(currEnvelope.HardwareTree != null)
                 {
-                    var dbDelay = ((int)currEnvelope.Header.Delay / 5) * 5;
-                    var delay = dbContext.Delays.FirstOrDefault(d => d.Value == dbDelay);
-                    if (delay == null)
-                    {
-                         delay = new Delay();
-                         delay.Value = dbDelay;
-                         delay.Id = Guid.NewGuid();
-                    }
-                    dbContext.Delays.Add(delay);
+                    var delay = currEnvelope.
+                        Header.RequestTime.Millisecond -
+                        currEnvelope.Header.AgentTime.Millisecond;
 
-                    dbContext.AgentDelays.Add(new AgentDelay()
+                    if (delay <= 100)
                     {
-                        AgentId = agent.Id,
-                        DelayId = delay.Id,
-                        Date = currEnvelope.Header.RequestTime
-                    });
-                  
+                        var answerTime = dbContext.AnswerTimes.Where(at => at.Delay == 100).FirstOrDefault();
+                        if (answerTime == null)
+                        {
+                            answerTime = new AnswerTime();
+                            answerTime.Delay = 100;
+                            answerTime.Id = Guid.NewGuid();
+                            answerTime.Agents.Add(agent);
+                        }
+                        answerTime.Agents.Add(agent);
+                        dbContext.AnswerTimes.Add(answerTime);
+                    }
+
+                   
+
                     NewDataDTO data = provider.GetNewData(
                         currEnvelope.HardwareTree, 
                         agent.Id,

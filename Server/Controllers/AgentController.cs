@@ -17,7 +17,7 @@ namespace Server.Controllers
         }
         
         [HttpGet]
-        public AgentsList GetAgents()
+        public IEnumerable<AgentDTO> GetAgents()
         {
             List<AgentDTO> agents = new List<AgentDTO>();
             foreach (var item in ctx.Agents)
@@ -31,14 +31,11 @@ namespace Server.Controllers
                 };
                 agents.Add(buff);
             }
-
-            AgentsList agentsList = new AgentsList();
-            agentsList.Agents = agents;
-            return agentsList;
+            return agents;
         }
 
         [HttpPost]
-        public IHttpActionResult AddAgent(AgentDTO agent)
+        public void AddAgent(AgentDTO agent)
         {
             var cred = new Credential()
             {
@@ -58,44 +55,35 @@ namespace Server.Controllers
             ctx.Credentials.Add(cred);
             ctx.Agents.Add(item);
             ctx.SaveChanges();
-            return Ok();
         }
 
         [HttpPut]
-        public IHttpActionResult EnableAgent(string endpoint)
+        public void EnableAgent(string endpoint)
         {
             var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
-            if (agent != null)
-            {
+            if(agent != null)
                 agent.IsEnabled = true;
-                ctx.SaveChanges();
-                return Ok();
-            }
-            return NotFound();
         }
 
         [HttpPut]
-        public IHttpActionResult DisableAgent(string endpoint)
+        public void DisableAgent(string endpoint)
         {
             var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
             if (agent != null)
-            {
                 agent.IsEnabled = false;
-                ctx.SaveChanges();
-                return Ok();
-            }
-            return NotFound();
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteAgent(string endpoint)
+        public void DeleteAgent(string endpoint)
         {
             var agent = ctx.Agents.Where( a => a.Endpoint == endpoint).FirstOrDefault();
-            if(agent == null)
-                return NotFound();
+            if(agent != null)
+                ctx.Agents.Remove(agent);
+            else
+            {
+                return;
+            }
 
-            ctx.Agents.Remove(agent);
-            
             var cred = ctx.Credentials.Where(c => c.Id == agent.CredId).FirstOrDefault();
             ctx.Credentials.Remove(cred);
 
@@ -119,8 +107,6 @@ namespace Server.Controllers
             }
 
             ctx.SaveChanges();
-
-            return Ok();
         }
     }
 }

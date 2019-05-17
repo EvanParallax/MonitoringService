@@ -61,12 +61,10 @@
   <ItemGroup>
     <Compile Include="AbstractConfigurator.cs" />
     <Compile Include="AgentDTO.cs" />
-    <Compile Include="AgentsList.cs" />
     <Compile Include="BackWorker.cs" />
     <Compile Include="HardwareTree.cs" />
     <Compile Include="ILoggerFormat.cs" />
     <Compile Include="ISensorHW.cs" />
-    <Compile Include="MetricsList.cs" />
     <Compile Include="MetricDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorHW.cs" />

@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGui", "ClientGui\Clie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTests", "ServerTests\ServerTests.csproj", "{DA9F1DEE-F265-4D02-828D-3A72196046E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsProxyService", "MetricsProxyService\MetricsProxyService.csproj", "{37A13433-3D4C-4D2F-944D-4B490290C8AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqLab", "LinqLab\LinqLab.csproj", "{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{DA9F1DEE-F265-4D02-828D-3A72196046E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA9F1DEE-F265-4D02-828D-3A72196046E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA9F1DEE-F265-4D02-828D-3A72196046E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37A13433-3D4C-4D2F-944D-4B490290C8AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37A13433-3D4C-4D2F-944D-4B490290C8AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37A13433-3D4C-4D2F-944D-4B490290C8AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37A13433-3D4C-4D2F-944D-4B490290C8AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
