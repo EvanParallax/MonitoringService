@@ -28,6 +28,7 @@ namespace Server.Controllers
                          select new MetricDTO()
                          {
                              Session = session.AgentTime,
+                             SId = sensor.Id,
                              Stype = sensor.Type,
                              Svalue = metric.Value
                          };

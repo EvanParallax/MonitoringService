@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTests", "ServerTests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqLab", "LinqLab\LinqLab.csproj", "{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsProxyService", "MetricsProxyService\MetricsProxyService.csproj", "{35130C01-BC3C-4E82-B626-227F166AB572}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53D1AF1B-8CBA-4F30-B3F0-5CF780246BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35130C01-BC3C-4E82-B626-227F166AB572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35130C01-BC3C-4E82-B626-227F166AB572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35130C01-BC3C-4E82-B626-227F166AB572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35130C01-BC3C-4E82-B626-227F166AB572}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
