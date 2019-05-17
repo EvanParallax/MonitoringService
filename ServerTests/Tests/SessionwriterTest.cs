@@ -84,7 +84,7 @@ namespace ServerTests.Tests
             fakeContext.As<IReadOnlyDataContext>().Setup(a => a.Credentials).Returns(creds);
 
             fakeReceiver = new Mock<IDataReceiver>();
-            fakeReceiver.Setup(a => a.GetDataAsync(It.IsAny<string>())).Returns(new Task<Envelope>(Func));
+            //fakeReceiver.Setup(a => a.GetDataAsync(It.IsAny<string>())).Returns((new Task<Envelope>(Func) , 0));
 
             fakeContext.Object.Agents.Add(new Agent()
             {

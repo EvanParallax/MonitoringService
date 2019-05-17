@@ -17,7 +17,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<MetricDTO> GetMetrics(string id)
+        public MetricsList GetMetrics(string id)
         {
             Guid agentId = new Guid(id);
             var result = from agent in ctx.Agents
@@ -32,7 +32,7 @@ namespace Server.Controllers
                              Svalue = metric.Value
                          };
 
-            return result.AsEnumerable();
+            return new MetricsList() { Metrics = result.ToList() };
         }
     }
 }

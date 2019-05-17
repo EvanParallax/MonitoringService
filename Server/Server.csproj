@@ -101,6 +101,9 @@
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -169,7 +172,8 @@
     <Compile Include="DTOs\ContainerDTO.cs" />
     <Compile Include="DTOs\NewDataDTO.cs" />
     <Compile Include="DTOs\NewSensorDTO.cs" />
-    <Compile Include="Entities\AnswerTime.cs" />
+    <Compile Include="Entities\AgentDelay.cs" />
+    <Compile Include="Entities\Delay.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -191,6 +195,10 @@
     <Compile Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.cs" />
     <Compile Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.Designer.cs">
       <DependentUpon>201905061253442_RepairAndAgentFieldIsEnabled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905170647386_SQLLab.cs" />
+    <Compile Include="Migrations\201905170647386_SQLLab.Designer.cs">
+      <DependentUpon>201905170647386_SQLLab.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Utils\DataProvider.cs" />
@@ -240,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905061253442_RepairAndAgentFieldIsEnabled.resx">
       <DependentUpon>201905061253442_RepairAndAgentFieldIsEnabled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905170647386_SQLLab.resx">
+      <DependentUpon>201905170647386_SQLLab.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -15,9 +15,9 @@ namespace Server.Controllers
         {
             this.ctx = ctx;
         }
-        
+
         [HttpGet]
-        public IEnumerable<AgentDTO> GetAgents()
+        public AgentsList GetAgents()
         {
             List<AgentDTO> agents = new List<AgentDTO>();
             foreach (var item in ctx.Agents)
@@ -31,11 +31,14 @@ namespace Server.Controllers
                 };
                 agents.Add(buff);
             }
-            return agents;
+
+            AgentsList agentsList = new AgentsList();
+            agentsList.Agents = agents;
+            return agentsList;
         }
 
         [HttpPost]
-        public void AddAgent(AgentDTO agent)
+        public IHttpActionResult AddAgent(AgentDTO agent)
         {
             var cred = new Credential()
             {
@@ -47,7 +50,7 @@ namespace Server.Controllers
             Agent item = new Agent()
             {
                 Id = Guid.NewGuid(),
-                CredId = new Guid(), 
+                CredId = new Guid(),
                 Endpoint = agent.Endpoint,
                 OsType = agent.OsType,
                 AgentVersion = agent.AgentVersion
@@ -55,34 +58,43 @@ namespace Server.Controllers
             ctx.Credentials.Add(cred);
             ctx.Agents.Add(item);
             ctx.SaveChanges();
+            return Ok();
         }
 
         [HttpPut]
-        public void EnableAgent(string endpoint)
-        {
-            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
-            if(agent != null)
-                agent.IsEnabled = true;
-        }
-
-        [HttpPut]
-        public void DisableAgent(string endpoint)
+        public IHttpActionResult EnableAgent(string endpoint)
         {
             var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
             if (agent != null)
+            {
+                agent.IsEnabled = true;
+                ctx.SaveChanges();
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPut]
+        public IHttpActionResult DisableAgent(string endpoint)
+        {
+            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
+            if (agent != null)
+            {
                 agent.IsEnabled = false;
+                ctx.SaveChanges();
+                return Ok();
+            }
+            return NotFound();
         }
 
         [HttpDelete]
-        public void DeleteAgent(string endpoint)
+        public IHttpActionResult DeleteAgent(string endpoint)
         {
-            var agent = ctx.Agents.Where( a => a.Endpoint == endpoint).FirstOrDefault();
-            if(agent != null)
-                ctx.Agents.Remove(agent);
-            else
-            {
-                return;
-            }
+            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
+            if (agent == null)
+                return NotFound();
+
+            ctx.Agents.Remove(agent);
 
             var cred = ctx.Credentials.Where(c => c.Id == agent.CredId).FirstOrDefault();
             ctx.Credentials.Remove(cred);
@@ -107,6 +119,8 @@ namespace Server.Controllers
             }
 
             ctx.SaveChanges();
+
+            return Ok();
         }
     }
 }
