@@ -35,7 +35,11 @@ namespace ClientGui
             Agents = new ObservableCollection<Agent>();
             AgentsChanged += MainViewModel_AgentsChanged;
             MetricsRequest += MainViewModel_MetricsRequest;
+            EnableAgent += MainViewModel_EnableAgent;
+            DisableAgent += MainViewModel_DisableAgent;
+            DeleteAgent += MainViewModel_DeleteAgent;
             AgentsChanged?.Invoke(this, EventArgs.Empty);
+
             
         }
 
@@ -86,6 +90,90 @@ namespace ClientGui
                           MessageBox.Show("There is no metrics, push 'Get metrics' button to load metrics");
                   }));
             }
+        }
+
+        private RelayCommand enableCommand;
+
+        public RelayCommand EnableCommand
+        {
+            get
+            {
+                return enableCommand ??
+                  (enableCommand = new RelayCommand(obj =>
+                  {
+                          EnableAgent?.Invoke(this, EventArgs.Empty);
+                  }));
+            }
+        }
+
+        private RelayCommand disableCommand;
+
+        public RelayCommand DisableCommand
+        {
+            get
+            {
+                return disableCommand ??
+                  (disableCommand = new RelayCommand(obj =>
+                  {
+                      EnableAgent?.Invoke(this, EventArgs.Empty);
+                  }));
+            }
+        }
+
+        private RelayCommand deleteCommand;
+
+        public RelayCommand DeleteCommand
+        {
+            get
+            {
+                return deleteCommand ??
+                  (deleteCommand = new RelayCommand(obj =>
+                  {
+                      DeleteAgent?.Invoke(this, EventArgs.Empty);
+                  }));
+            }
+        }
+
+        private event EventHandler EnableAgent;
+
+        private async void MainViewModel_EnableAgent(object sender, EventArgs e)
+        {
+            var response = await client.GetAsync("Http://localhost:59217/api/agent/enableagent/" + selectedAgent.Id.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show(response.StatusCode.ToString());
+                return;
+            }
+
+            
+        }
+
+        private event EventHandler DisableAgent;
+
+        private async void MainViewModel_DisableAgent(object sender, EventArgs e)
+        {
+            var response = await client.GetAsync("Http://localhost:59217/api/agent/disableagent/" + selectedAgent.Id.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show(response.StatusCode.ToString());
+                return;
+            }
+        }
+
+        private event EventHandler DeleteAgent;
+
+        private async void MainViewModel_DeleteAgent(object sender, EventArgs e)
+        {
+            var response = await client.GetAsync("Http://localhost:59217/api/agent/deleteagent/" + selectedAgent.Id.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show(response.StatusCode.ToString());
+                return;
+            }
+
         }
 
         public object Agentgrid { get; private set; }

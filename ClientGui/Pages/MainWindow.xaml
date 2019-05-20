@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ClientGui"
         xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Monitoring Service" Height="500" Width="1250">
+        Title="Monitoring Service" Height="550" Width="1250">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
@@ -64,8 +64,9 @@
         </DataGrid>
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,280,5,5">
             <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Add new agent</Button>
-            <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Enable Agent</Button>
-            <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Disable Agentt</Button>
+            <Button Command="{Binding EnableCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Enable Agent</Button>
+            <Button Command="{Binding DisableCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Disable Agent</Button>
+            <Button Command="{Binding DeleteCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Delete Agent</Button>
             <Button Command="{Binding GetMetrics}" Margin="5,5,5,10 " HorizontalAlignment="Left">Get metrics</Button>
             <Button Command="{Binding MetricsGraphCommand}" Margin="5,5,5,10 " HorizontalAlignment="Left">Metrics graph</Button>
         </StackPanel>
