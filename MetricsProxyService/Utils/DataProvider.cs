@@ -3,7 +3,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,6 +64,8 @@ namespace MetricsProxyService.Utils
         public void Dispose()
         {
             client.Dispose();
+            cache.Dispose();
+            locking.Dispose();
         }
     }
 }

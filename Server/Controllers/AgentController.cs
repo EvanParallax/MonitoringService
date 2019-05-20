@@ -22,14 +22,15 @@ namespace Server.Controllers
             List<AgentDTO> agents = new List<AgentDTO>();
             foreach (var item in ctx.Agents)
             {
+                var creds = ctx.Credentials.FirstOrDefault(c => c.Id == item.CredId);
                 AgentDTO buff = new AgentDTO()
                 {
                     Id = item.Id,
                     Endpoint = item.Endpoint,
                     OsType = item.OsType,
                     AgentVersion = item.AgentVersion,
-                    Login = ctx.Credentials.FirstOrDefault(c => c.Id == item.CredId).Login,
-                    Password = ctx.Credentials.FirstOrDefault(c => c.Id == item.CredId).Password
+                    Login = creds.Login,
+                    Password = creds.Password
                 };
                 agents.Add(buff);
             }
