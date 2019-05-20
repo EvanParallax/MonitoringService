@@ -27,7 +27,9 @@ namespace Server.Controllers
                     Id = item.Id,
                     Endpoint = item.Endpoint,
                     OsType = item.OsType,
-                    AgentVersion = item.AgentVersion
+                    AgentVersion = item.AgentVersion,
+                    Login = ctx.Credentials.FirstOrDefault(c => c.Id == item.CredId).Login,
+                    Password = ctx.Credentials.FirstOrDefault(c => c.Id == item.CredId).Password
                 };
                 agents.Add(buff);
             }

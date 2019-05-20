@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ClientGui"
         xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Monitoring Service" Height="350" Width="525">
+        Title="Monitoring Service" Height="500" Width="1250">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
@@ -19,7 +19,7 @@
             <Setter Property="FontSize" Value="14" />
         </Style>
     </Window.Resources>
-    <Grid Background="Lavender">
+    <Grid Background="Lavender" Margin="0,0,0,-152">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="0.8*" />
@@ -27,21 +27,21 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.2*" />
+
         </Grid.RowDefinitions>
         <Label Margin="5" Grid.Column="0">Agents</Label>
-        <ListBox Margin="5" Grid.Column="0" ItemsSource="{Binding Agents}"
-                 SelectedItem="{Binding SelectedAgent}">
+        <ListBox Margin="5,5,10,113" Grid.Column="0" ItemsSource="{Binding Agents}"
+                 SelectedItem="{Binding SelectedAgent}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Endpoint}" />
+                        <TextBlock FontSize="18" Text="{Binding Path=Id}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Margin="5" Grid.Column="1" DataContext="{Binding SelectedAgent}">
+        <StackPanel Margin="5,5,5,113" Grid.Column="1" DataContext="{Binding SelectedAgent}">
             <TextBlock Text="Agent info"  />
             <Label/>
             <TextBlock Text="Url" />
@@ -52,16 +52,22 @@
             <Label/>
             <TextBlock Text="Version" />
             <TextBox Text="{Binding AgentVersion, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="Login" />
+            <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
+            <Label/>
+            <TextBlock Text="Password" />
+            <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+            <Label/>
         </StackPanel>
-        <DataGrid  Margin="5" Grid.Column="2" x:Name="AgentsGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedAgent.Metrics}">
-            
-        </DataGrid>
+        <DataGrid  Margin="5,5,5,113" Grid.Column="2" x:Name="AgentsGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedAgent.Metrics}">
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Command="{Binding GetMetrics}">Get metrics</Button>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-            <Button Command="{Binding AddCommand}">Add new agent</Button>
+        </DataGrid>
+        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,280,5,5">
+            <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Add new agent</Button>
+            <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Enable Agent</Button>
+            <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Disable Agentt</Button>
+            <Button Command="{Binding GetMetrics}" Margin="5,5,5,10 " HorizontalAlignment="Left">Get metrics</Button>
+            <Button Command="{Binding MetricsGraphCommand}" Margin="5,5,5,10 " HorizontalAlignment="Left">Metrics graph</Button>
         </StackPanel>
     </Grid>
 </Window>

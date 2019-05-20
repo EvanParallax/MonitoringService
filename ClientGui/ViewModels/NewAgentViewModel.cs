@@ -52,8 +52,11 @@ namespace ClientGui
 
         private async void NewAgentViewModel_AddingAgent(object sender, EventArgs e)
         {
-            var response = await client.PostAsJsonAsync("Http://localhost:59217/api/Server/", newAgent);
-            MessageBox.Show("New agent added");
+            var response = await client.PostAsJsonAsync("Http://localhost:59217/api/Agent/", newAgent);
+            if(response.IsSuccessStatusCode)
+                MessageBox.Show("New agent added");
+            else
+                MessageBox.Show("Error : " + response.StatusCode.ToString());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

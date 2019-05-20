@@ -1,19 +1,18 @@
-﻿using Common;
+﻿using ClientGui.Pages;
+using Common;
 using MVVM;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace ClientGui
 {
-    class MainViewModel : INotifyPropertyChanged
+    class MainViewModel : INotifyPropertyChanged, IDisposable
     {
         private HttpClient client = new HttpClient();
 
@@ -69,24 +68,59 @@ namespace ClientGui
             }
         }
 
+        private RelayCommand metricsGrtaphComand;
+
+        public RelayCommand MetricsGraphCommand
+        {
+            get
+            {
+                return metricsGrtaphComand ??
+                  (metricsGrtaphComand = new RelayCommand(obj =>
+                  {
+                      if (SelectedAgent.Metrics != null)
+                      {
+                          MetricsGraph window = new MetricsGraph(SelectedAgent.Metrics);
+                          window.Show();
+                      }
+                      else
+                          MessageBox.Show("There is no metrics, push 'Get metrics' button to load metrics");
+                  }));
+            }
+        }
+
         public object Agentgrid { get; private set; }
 
         private event EventHandler MetricsRequest;
 
         private async void MainViewModel_MetricsRequest(object sender, EventArgs e)
         {
-            var response = await client.GetAsync("Http://localhost:59217/api/Server/" + selectedAgent.Id.ToString());
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            selectedAgent.Metrics = JsonConvert.DeserializeObject<List<MetricDTO>>(responseBody);
+            var response = await client.GetAsync("Http://localhost:59217/api/Metrics/" + selectedAgent.Id.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show(response.StatusCode.ToString());
+                return;
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            selectedAgent.Metrics = JsonConvert.DeserializeObject<MetricsList>(responseBody).Metrics;
         }
 
         private event EventHandler AgentsChanged;
 
         private async void MainViewModel_AgentsChanged(object sender, EventArgs e)
         {
-            var response = await client.GetAsync("Http://localhost:59217/api/Server");
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            foreach (var item in JsonConvert.DeserializeObject<List<AgentDTO>>(responseBody))
+            var response = await client.GetAsync("Http://localhost:59217/api/Agent");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show(response.StatusCode.ToString());
+                return;
+            }
+                
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            foreach (var item in JsonConvert.DeserializeObject<AgentsList>(responseBody).Agents)
                 Agents.Add(new Agent()
                 {
                     Id = item.Id,
@@ -103,6 +137,11 @@ namespace ClientGui
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public void Dispose()
+        {
+            client.Dispose();
         }
     }
 }

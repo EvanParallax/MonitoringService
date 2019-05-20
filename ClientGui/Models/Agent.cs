@@ -12,6 +12,8 @@ namespace ClientGui
         private string endpoint;
         private string osType;
         private string agentVersion;
+        private string login;
+        private string password;
         private List<MetricDTO> metrics;
 
         public List<MetricDTO> Metrics
@@ -70,6 +72,30 @@ namespace ClientGui
             {
                 agentVersion = value;
                 OnPropertyChanged("AgentVersion");
+            }
+
+        }
+
+        public string Login
+        {
+            get { return login; }
+
+            set
+            {
+                login = value;
+                OnPropertyChanged("Login");
+            }
+
+        }
+
+        public string Password
+        {
+            get { return password; }
+
+            set
+            {
+                password = value;
+                OnPropertyChanged("Password");
             }
 
         }
