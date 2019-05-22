@@ -28,15 +28,15 @@ namespace Agent.Utils
             lastCatchedData = new Queue<HardwareTree>();
         }
 
-        public async Task WatchProc()
+        public Task WatchProc()
         {
-            await Task.Run(() => 
-            { 
-                var tree = provider.GetSystemInfo();
+            var tree = provider.GetSystemInfo();
 
-                lock (sync)
-                    lastCatchedData.Enqueue(tree);
-            });
+            lock (sync)
+                lastCatchedData.Enqueue(tree);
+
+
+            return Task.CompletedTask;
         }
 
         public HardwareTree GetSensorsData()

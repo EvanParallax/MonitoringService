@@ -1,9 +1,11 @@
 ﻿using Common;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Server.Utils
 {
@@ -14,35 +16,54 @@ namespace Server.Utils
 
     public class DataReceiver : IDataReceiver
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private static readonly HttpClient Client = new HttpClient();
 
         public async Task<(Envelope env, int del)> GetDataAsync(string endpoint)
         {
-            var watch = Stopwatch.StartNew();
-            HttpResponseMessage response = await Client.GetAsync(endpoint);
-            var responseBody = response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync() : String.Empty;
-            watch.Stop();
-            int delay;
-            Envelope envelope;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                delay = watch.Elapsed.Milliseconds;
-                envelope = JsonConvert.DeserializeObject<Envelope>(responseBody);
-                return (envelope, delay);
-            }
+                var watch = Stopwatch.StartNew();
+                HttpResponseMessage response = await Client.GetAsync(endpoint);
+                var responseBody = response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync() : String.Empty;
+                watch.Stop();
+                int delay;
+                Envelope envelope;
 
-            delay = watch.Elapsed.Milliseconds;
-            envelope = new Envelope()
-            {
-                Header = new Header()
+                if (response.IsSuccessStatusCode)
                 {
-                    ErrorMsg = response.StatusCode.ToString(),
-                    AgentTime = DateTime.Now
+                    delay = watch.Elapsed.Milliseconds;
+                    envelope = JsonConvert.DeserializeObject<Envelope>(responseBody);
+                    return (envelope, delay);
                 }
-            };
 
-            return (envelope, delay);
+                delay = watch.Elapsed.Milliseconds;
+                envelope = new Envelope()
+                {
+                    Header = new Header()
+                    {
+                        ErrorMsg = response.StatusCode.ToString(),
+                        AgentTime = DateTime.Now
+                    }
+                };
+
+                return (envelope, delay);
+
+            }
+            catch (AggregateException ae)
+            {
+                logger.Error(ae.Message, ae);
+                return (new Envelope()
+                {
+                    Header = new Header()
+                    {
+                        ErrorMsg = ae.Message,
+                        AgentTime = DateTime.Now
+                    }
+                }, 0);
+            }
+            
         }
     }
 }

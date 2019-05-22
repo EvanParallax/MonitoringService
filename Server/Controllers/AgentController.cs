@@ -64,7 +64,7 @@ namespace Server.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("enable/{id}")]
         public IHttpActionResult EnableAgent(string id)
         {
@@ -79,7 +79,7 @@ namespace Server.Controllers
             return NotFound();
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("disable/{id}")]
         public IHttpActionResult DisableAgent(string id)
         {
@@ -95,9 +95,11 @@ namespace Server.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteAgent(string endpoint)
+        [Route("delete/{id}")]
+        public IHttpActionResult DeleteAgent(string id)
         {
-            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
+            var identifier = Guid.Parse(id);
+            var agent = ctx.Agents.Where(a => a.Id == identifier).FirstOrDefault();
             if (agent == null)
                 return NotFound();
 

@@ -34,8 +34,6 @@ namespace Server.Utils
 
         public async Task WriteSession()
         {
-            await Task.Run(async () =>
-            {
                 foreach (var agent in dbContext.Agents)
                 {
                     if (!agent.IsEnabled)
@@ -89,7 +87,6 @@ namespace Server.Utils
                 }
                 lock (locking)
                     dbContext.SaveChanges();
-            });
         }
     }
 }
