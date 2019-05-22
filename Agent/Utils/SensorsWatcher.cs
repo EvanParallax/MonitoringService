@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using System;
+using System.Threading.Tasks;
 
 namespace Agent.Utils
 {
@@ -10,7 +11,7 @@ namespace Agent.Utils
         [CanBeNull]
         HardwareTree GetSensorsData();
 
-        void WatchProc();
+        Task WatchProc();
 
         new void Dispose();
     }
@@ -27,12 +28,15 @@ namespace Agent.Utils
             lastCatchedData = new Queue<HardwareTree>();
         }
 
-        public void WatchProc()
+        public async Task WatchProc()
         {
-            var tree = provider.GetSystemInfo();            
+            await Task.Run(() => 
+            { 
+                var tree = provider.GetSystemInfo();
 
-            lock (sync) 
-                lastCatchedData.Enqueue(tree);
+                lock (sync)
+                    lastCatchedData.Enqueue(tree);
+            });
         }
 
         public HardwareTree GetSensorsData()

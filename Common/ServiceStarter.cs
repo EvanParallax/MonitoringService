@@ -8,7 +8,7 @@ namespace Common
 {
     public class ServiceStarter // todo: refactoring
     {
-        public static void Start(Action callback, string name)
+        public static void Start(Func<Task> callback, string name)
         {
             BackWorker worker = new BackWorker(name, callback,2000);
         }

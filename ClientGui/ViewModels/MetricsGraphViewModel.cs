@@ -46,15 +46,9 @@ namespace ClientGui.ViewModels
                 return metricsChangedComand ??
                   (metricsChangedComand = new RelayCommand(obj =>
                   {
-                      CurrentSensorChanged?.Invoke(this, EventArgs.Empty);
+                      SetUpModel();
                   }));
             }
-        }
-
-        private event EventHandler CurrentSensorChanged;
-        private void MetricsGraphViewModel_CurrentSensorChanged(object sender, EventArgs e)
-        {
-            SetUpModel();
         }
 
         public MetricsGraphViewModel(List<MetricDTO> data)
@@ -67,14 +61,11 @@ namespace ClientGui.ViewModels
 
             currentSensor = Metrics.FirstOrDefault().SId;
 
-            CurrentSensorChanged += MetricsGraphViewModel_CurrentSensorChanged;
-
             PlotModel = new PlotModel();
             var dateAxis = new DateTimeAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, IntervalLength = 80 };
             PlotModel.Axes.Add(dateAxis);
             var valueAxis = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "Value" };
             PlotModel.Axes.Add(valueAxis);
-            //SetUpModel();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

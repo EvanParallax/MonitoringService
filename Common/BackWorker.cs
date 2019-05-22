@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Common
 {
@@ -19,7 +20,7 @@ namespace Common
             shutdownRequest.Reset();
         }
 
-        public BackWorker(string procName, Action process, int queryIntervalMilliSec, int interrupIntervalMilliSec = 1000)
+        public BackWorker(string procName, Func<Task> process, int queryIntervalMilliSec, int interrupIntervalMilliSec = 1000)
         {
             this.queryIntervalMilliSec = queryIntervalMilliSec;
             this.interrupIntervalMilliSec = interrupIntervalMilliSec;
@@ -36,7 +37,7 @@ namespace Common
 
         private void Processing(object process)
         {
-            Action work = (Action)process;
+            var work = (Func<Task>)process;
             while (true)
             {
                 for (var i = 0; i < queryIntervalMilliSec / interrupIntervalMilliSec; ++i)

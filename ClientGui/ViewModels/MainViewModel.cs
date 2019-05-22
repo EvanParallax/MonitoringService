@@ -35,10 +35,7 @@ namespace ClientGui
         {
             Agents = new ObservableCollection<Agent>();
             AgentsChanged += MainViewModel_AgentsChanged;
-            MetricsRequest += MainViewModel_MetricsRequest;
-            EnableAgent += MainViewModel_EnableAgent;
-            DisableAgent += MainViewModel_DisableAgent;
-            DeleteAgent += MainViewModel_DeleteAgent;
+
             AgentsChanged?.Invoke(this, EventArgs.Empty);
 
             
@@ -51,9 +48,18 @@ namespace ClientGui
             get
             {
                 return getMetrics ??
-                  (getMetrics = new RelayCommand(obj =>
+                  (getMetrics = new RelayCommand(async (obj) =>
                   {
-                      MetricsRequest?.Invoke(this, EventArgs.Empty);
+                      var response = await client.GetAsync("Http://localhost:59217/api/Metrics/" + selectedAgent.Id.ToString());
+
+                      if (!response.IsSuccessStatusCode)
+                      {
+                          MessageBox.Show(response.StatusCode.ToString());
+                          return;
+                      }
+
+                      string responseBody = await response.Content.ReadAsStringAsync();
+                      selectedAgent.Metrics = JsonConvert.DeserializeObject<MetricsList>(responseBody).Metrics;
                   }));
             }
         }
@@ -100,9 +106,17 @@ namespace ClientGui
             get
             {
                 return enableCommand ??
-                  (enableCommand = new RelayCommand(obj =>
+                  (enableCommand = new RelayCommand(async (obj) =>
                   {
-                          EnableAgent?.Invoke(this, EventArgs.Empty);
+                      var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/agent/enableagent/{selectedAgent.Id.ToString()}");
+
+                      if (!response.IsSuccessStatusCode)
+                      {
+                          MessageBox.Show(response.StatusCode.ToString());
+                          return;
+                      }
+
+                      AgentsChanged?.Invoke(this, EventArgs.Empty);
                   }));
             }
         }
@@ -114,9 +128,17 @@ namespace ClientGui
             get
             {
                 return disableCommand ??
-                  (disableCommand = new RelayCommand(obj =>
+                  (disableCommand = new RelayCommand(async (obj) =>
                   {
-                      EnableAgent?.Invoke(this, EventArgs.Empty);
+                      var response = await client.GetAsync("Http://localhost:59217/api/agent/deleteagent/" + selectedAgent.Id.ToString());
+
+                      if (!response.IsSuccessStatusCode)
+                      {
+                          MessageBox.Show(response.StatusCode.ToString());
+                          return;
+                      }
+
+                      AgentsChanged?.Invoke(this, EventArgs.Empty);
                   }));
             }
         }
@@ -128,72 +150,21 @@ namespace ClientGui
             get
             {
                 return deleteCommand ??
-                  (deleteCommand = new RelayCommand(obj =>
+                  (deleteCommand = new RelayCommand(async (obj) =>
                   {
-                      DeleteAgent?.Invoke(this, EventArgs.Empty);
+                      var response = await client.GetAsync("Http://localhost:59217/api/agent/deleteagent/" + selectedAgent.Id.ToString());
+
+                      if (!response.IsSuccessStatusCode)
+                      {
+                          MessageBox.Show(response.StatusCode.ToString());
+                          return;
+                      }
+
+                      AgentsChanged?.Invoke(this, EventArgs.Empty);
                   }));
             }
         }
 
-        private event EventHandler EnableAgent;
-
-        private async void MainViewModel_EnableAgent(object sender, EventArgs e)
-        {
-            var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/agent/enableagent/{selectedAgent.Id.ToString()}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show(response.StatusCode.ToString());
-                return;
-            }
-
-            
-        }
-
-        private event EventHandler DisableAgent;
-
-        private async void MainViewModel_DisableAgent(object sender, EventArgs e)
-        {
-            var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/agent/disableagent/{selectedAgent.Id.ToString()}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show(response.StatusCode.ToString());
-                return;
-            }
-        }
-
-        private event EventHandler DeleteAgent;
-
-        private async void MainViewModel_DeleteAgent(object sender, EventArgs e)
-        {
-            var response = await client.GetAsync("Http://localhost:59217/api/agent/deleteagent/" + selectedAgent.Id.ToString());
-
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show(response.StatusCode.ToString());
-                return;
-            }
-
-        }
-
-        public object Agentgrid { get; private set; }
-
-        private event EventHandler MetricsRequest;
-
-        private async void MainViewModel_MetricsRequest(object sender, EventArgs e)
-        {
-            var response = await client.GetAsync("Http://localhost:59217/api/Metrics/" + selectedAgent.Id.ToString());
-
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show(response.StatusCode.ToString());
-                return;
-            }
-
-            string responseBody = await response.Content.ReadAsStringAsync();
-            selectedAgent.Metrics = JsonConvert.DeserializeObject<MetricsList>(responseBody).Metrics;
-        }
 
         private event EventHandler AgentsChanged;
 
