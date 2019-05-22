@@ -21,6 +21,10 @@ namespace ClientGui
 
         public ObservableCollection<Agent> Agents { get; set; }
 
+        private readonly string serverUrl;
+
+        private readonly string proxyUrl;
+
         public Agent SelectedAgent
         {
             get { return selectedAgent; }
@@ -33,6 +37,8 @@ namespace ClientGui
 
         public MainViewModel()
         {
+            serverUrl = ConfigurationManager.AppSettings["ServerUrl"];
+            proxyUrl = ConfigurationManager.AppSettings["MetricsUrl"];
             Agents = new ObservableCollection<Agent>();
             AgentsChanged += MainViewModel_AgentsChanged;
 
@@ -50,7 +56,7 @@ namespace ClientGui
                 return getMetrics ??
                   (getMetrics = new RelayCommand(async (obj) =>
                   {
-                      var response = await client.GetAsync("Http://localhost:59217/api/Metrics/" + selectedAgent.Id.ToString());
+                      var response = await client.GetAsync($"{proxyUrl}api/MetricsProxy/GetMetrics/{selectedAgent.Id.ToString()}");
 
                       if (!response.IsSuccessStatusCode)
                       {
@@ -108,7 +114,7 @@ namespace ClientGui
                 return enableCommand ??
                   (enableCommand = new RelayCommand(async (obj) =>
                   {
-                      var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/agent/enableagent/{selectedAgent.Id.ToString()}");
+                      var response = await client.GetAsync($"{serverUrl}enableagent/{selectedAgent.Id.ToString()}");
 
                       if (!response.IsSuccessStatusCode)
                       {
@@ -130,7 +136,7 @@ namespace ClientGui
                 return disableCommand ??
                   (disableCommand = new RelayCommand(async (obj) =>
                   {
-                      var response = await client.GetAsync("Http://localhost:59217/api/agent/deleteagent/" + selectedAgent.Id.ToString());
+                      var response = await client.GetAsync($"{serverUrl}disableagent/{selectedAgent.Id.ToString()}");
 
                       if (!response.IsSuccessStatusCode)
                       {
@@ -152,7 +158,7 @@ namespace ClientGui
                 return deleteCommand ??
                   (deleteCommand = new RelayCommand(async (obj) =>
                   {
-                      var response = await client.GetAsync("Http://localhost:59217/api/agent/deleteagent/" + selectedAgent.Id.ToString());
+                      var response = await client.GetAsync($"{serverUrl}delete/{selectedAgent.Id.ToString()}");
 
                       if (!response.IsSuccessStatusCode)
                       {
@@ -170,7 +176,7 @@ namespace ClientGui
 
         private async void MainViewModel_AgentsChanged(object sender, EventArgs e)
         {
-            var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/Agent");
+            var response = await client.GetAsync($"{serverUrl}api/Agent");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -188,7 +194,8 @@ namespace ClientGui
                     OsType = item.OsType,
                     AgentVersion = item.AgentVersion
                 });
-            SelectedAgent = Agents.First();
+            if(Agents.Any())
+                SelectedAgent = Agents.First();
 
         }
 

@@ -17,7 +17,7 @@ namespace MetricsProxyService.Controllers
         }
 
         [HttpGet]
-        //[Route("GetMetrics/{id?}")]
+        [Route("GetMetrics/{id?}")]
         public async Task<MetricsList> GetMetrics(string id)
         {
             return await provider.GetMetricsCache(id);

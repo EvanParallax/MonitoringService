@@ -64,7 +64,7 @@ namespace Server.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("enable/{id}")]
         public IHttpActionResult EnableAgent(string id)
         {
@@ -79,7 +79,7 @@ namespace Server.Controllers
             return NotFound();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("disable/{id}")]
         public IHttpActionResult DisableAgent(string id)
         {
@@ -94,7 +94,7 @@ namespace Server.Controllers
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpGet]
         [Route("delete/{id}")]
         public IHttpActionResult DeleteAgent(string id)
         {

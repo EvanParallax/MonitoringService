@@ -58,8 +58,8 @@ namespace ClientGui.ViewModels
             Sensors = new ObservableCollection<string>();
             foreach (var item in Metrics)
                 Sensors.Add(item.SId);
-
-            currentSensor = Metrics.FirstOrDefault().SId;
+            if(!Metrics.Any())
+                currentSensor = Metrics.FirstOrDefault().SId;
 
             PlotModel = new PlotModel();
             var dateAxis = new DateTimeAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, IntervalLength = 80 };

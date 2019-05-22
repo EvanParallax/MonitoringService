@@ -27,10 +27,10 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-
         </Grid.RowDefinitions>
-        <Label Margin="5" Grid.Column="0">Agents</Label>
-        <ListBox Margin="5,5,10,113" Grid.Column="0" ItemsSource="{Binding Agents}"
+
+        <Label Grid.Row="0">Agents</Label>
+        <ListBox Margin="5,5,10,172"  Grid.Row="1" ItemsSource="{Binding Agents}"
                  SelectedItem="{Binding SelectedAgent}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -41,7 +41,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Margin="5,5,5,113" Grid.Column="1" DataContext="{Binding SelectedAgent}">
+        <StackPanel Margin="5,5,5,172" Grid.Column="1" DataContext="{Binding SelectedAgent}">
             <TextBlock Text="Agent info"  />
             <Label/>
             <TextBlock Text="Url" />
@@ -52,17 +52,13 @@
             <Label/>
             <TextBlock Text="Version" />
             <TextBox Text="{Binding AgentVersion, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="Login" />
-            <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
-            <Label/>
-            <TextBlock Text="Password" />
-            <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+
             <Label/>
         </StackPanel>
-        <DataGrid  Margin="5,5,5,113" Grid.Column="2" x:Name="AgentsGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedAgent.Metrics}">
+        <DataGrid  Margin="5,5,5,172" Grid.Column="2" x:Name="AgentsGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedAgent.Metrics}">
 
         </DataGrid>
-        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,280,5,5">
+        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,280,5,172">
             <Button Command="{Binding AddCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Add new agent</Button>
             <Button Command="{Binding EnableCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Enable Agent</Button>
             <Button Command="{Binding DisableCommand}" Margin="5,5,5,10" HorizontalAlignment="Left">Disable Agent</Button>
