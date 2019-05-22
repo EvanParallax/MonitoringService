@@ -35,6 +35,8 @@ namespace MetricsProxyService
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
+            services.AddSingleton(typeof(IConfigProvider), typeof(ConfigProvider));
+
             services.AddSingleton<DataProvider>();
 
             services.AddMemoryCache();

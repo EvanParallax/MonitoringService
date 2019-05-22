@@ -17,11 +17,11 @@ namespace MetricsProxyService.Utils
 
         private readonly IMemoryCache cache;
 
-        private readonly IConfiguration config;
+        private readonly IConfigProvider config;
 
         private readonly SemaphoreSlim locking;
 
-        public DataProvider(IMemoryCache cache, IConfiguration config)
+        public DataProvider(IMemoryCache cache, IConfigProvider config)
         {
             this.client = new HttpClient();
 
@@ -40,7 +40,7 @@ namespace MetricsProxyService.Utils
 
         private async Task<MetricsList> GetMetricsAsync(string id)
         {
-            var url = config.GetSection("Server").GetValue<string>("ServerUrl");
+            var url = config.ServerUrl;
             HttpResponseMessage response = await client.GetAsync($"{url}api/Metrics/{id}");
             string responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<MetricsList>(responseBody);
