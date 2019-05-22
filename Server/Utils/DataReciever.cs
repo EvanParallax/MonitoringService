@@ -53,7 +53,9 @@ namespace Server.Utils
             }
             catch (AggregateException ae)
             {
-                logger.Error(ae.Message, ae);
+                foreach(var item in ae.Flatten().InnerExceptions)
+                    logger.Error(item.Message, item);
+
                 return (new Envelope()
                 {
                     Header = new Header()
@@ -61,7 +63,8 @@ namespace Server.Utils
                         ErrorMsg = ae.Message,
                         AgentTime = DateTime.Now
                     }
-                }, 0);
+                }, 
+                0);
             }
             
         }
