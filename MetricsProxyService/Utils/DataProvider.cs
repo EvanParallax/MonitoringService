@@ -1,5 +1,6 @@
 ﻿using Common;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,15 @@ namespace MetricsProxyService.Utils
 
         private readonly IMemoryCache cache;
 
+        private readonly IConfiguration config;
+
         private readonly SemaphoreSlim locking;
 
-        public DataProvider(IMemoryCache cache)
+        public DataProvider(IMemoryCache cache, IConfiguration config)
         {
             this.client = new HttpClient();
+
+            this.config = config;
 
             this.cache = cache;
 
@@ -35,7 +40,8 @@ namespace MetricsProxyService.Utils
 
         private async Task<MetricsList> GetMetricsAsync(string id)
         {
-            HttpResponseMessage response = await client.GetAsync($"http://localhost:59217/api/Metrics/{id}");
+            var url = config.GetSection("Server").GetValue<string>("ServerUrl");
+            HttpResponseMessage response = await client.GetAsync($"{url}api/Metrics/{id}");
             string responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<MetricsList>(responseBody);
         }

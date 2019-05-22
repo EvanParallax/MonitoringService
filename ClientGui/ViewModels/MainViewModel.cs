@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -138,7 +139,7 @@ namespace ClientGui
 
         private async void MainViewModel_EnableAgent(object sender, EventArgs e)
         {
-            var response = await client.GetAsync("Http://localhost:59217/api/agent/enableagent/" + selectedAgent.Id.ToString());
+            var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/agent/enableagent/{selectedAgent.Id.ToString()}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -153,7 +154,7 @@ namespace ClientGui
 
         private async void MainViewModel_DisableAgent(object sender, EventArgs e)
         {
-            var response = await client.GetAsync("Http://localhost:59217/api/agent/disableagent/" + selectedAgent.Id.ToString());
+            var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/agent/disableagent/{selectedAgent.Id.ToString()}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -198,7 +199,7 @@ namespace ClientGui
 
         private async void MainViewModel_AgentsChanged(object sender, EventArgs e)
         {
-            var response = await client.GetAsync("Http://localhost:59217/api/Agent");
+            var response = await client.GetAsync($"{ConfigurationManager.AppSettings["ServerUrl"]}api/Agent");
 
             if (!response.IsSuccessStatusCode)
             {

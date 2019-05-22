@@ -53,7 +53,7 @@ namespace Server.Controllers
             Agent item = new Agent()
             {
                 Id = Guid.NewGuid(),
-                CredId = new Guid(),
+                CredId = cred.Id,
                 Endpoint = agent.Endpoint,
                 OsType = agent.OsType,
                 AgentVersion = agent.AgentVersion
@@ -64,10 +64,12 @@ namespace Server.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public IHttpActionResult EnableAgent(string endpoint)
+        [HttpGet]
+        [Route("enable/{id}")]
+        public IHttpActionResult EnableAgent(string id)
         {
-            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
+            var identifier = Guid.Parse(id);
+            var agent = ctx.Agents.Where(a => a.Id == identifier).FirstOrDefault();
             if (agent != null)
             {
                 agent.IsEnabled = true;
@@ -77,10 +79,12 @@ namespace Server.Controllers
             return NotFound();
         }
 
-        [HttpPut]
-        public IHttpActionResult DisableAgent(string endpoint)
+        [HttpGet]
+        [Route("disable/{id}")]
+        public IHttpActionResult DisableAgent(string id)
         {
-            var agent = ctx.Agents.Where(a => a.Endpoint == endpoint).FirstOrDefault();
+            var identifier = Guid.Parse(id);
+            var agent = ctx.Agents.Where(a => a.Id == identifier).FirstOrDefault();
             if (agent != null)
             {
                 agent.IsEnabled = false;

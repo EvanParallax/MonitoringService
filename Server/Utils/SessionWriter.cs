@@ -14,6 +14,7 @@ namespace Server.Utils
         private readonly IDataProvider provider;
         private readonly IHierarchyWriter hierarchyWriter;
         private readonly IMetricWriter metricWriter;
+        private readonly object locking;
 
         public SessionWriter(IDataContext ctx, IDataReceiver rcvr, IDataProvider prvdr, IHierarchyWriter hWriter, IMetricWriter mWriter)
         {
@@ -22,6 +23,7 @@ namespace Server.Utils
             provider = prvdr;
             hierarchyWriter = hWriter;
             metricWriter = mWriter;
+            locking = new object();
         }
 
         public void Dispose()
@@ -29,7 +31,7 @@ namespace Server.Utils
             dbContext.Dispose();
         }
 
-        public void WriteSession()
+        public async void WriteSession()
         {
             foreach (var agent in dbContext.Agents)
             {
@@ -37,7 +39,7 @@ namespace Server.Utils
                     continue;
 
                 var requestTime = DateTime.Now;
-                var result = receiver.GetDataAsync(agent.Endpoint).Result;
+                var result = await receiver.GetDataAsync(agent.Endpoint);
                 Envelope currEnvelope = result.env;
                 int del = result.del;
                 currEnvelope.Header.RequestTime = requestTime;
@@ -82,7 +84,8 @@ namespace Server.Utils
                     metricWriter.WriteMetrics(currEnvelope.HardwareTree, currAgentSession.Id);
                 }
             }
-            dbContext.SaveChanges();
+            lock(locking)
+                dbContext.SaveChanges();
         }
     }
 }
