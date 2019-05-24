@@ -20,7 +20,7 @@ namespace Common
             shutdownRequest.Reset();
         }
 
-        public BackWorker(string procName, Func<Task> process, int queryIntervalMilliSec, int interrupIntervalMilliSec = 1000)
+        public BackWorker(string procName, Action process, int queryIntervalMilliSec, int interrupIntervalMilliSec = 1000)
         {
             this.queryIntervalMilliSec = queryIntervalMilliSec;
             this.interrupIntervalMilliSec = interrupIntervalMilliSec;
@@ -37,7 +37,7 @@ namespace Common
 
         private void Processing(object process)
         {
-            var work = (Func<Task>)process;
+            var work = (Action)process;
             while (true)
             {
                 for (var i = 0; i < queryIntervalMilliSec / interrupIntervalMilliSec; ++i)

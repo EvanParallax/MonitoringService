@@ -6,7 +6,7 @@ namespace Server.Utils
 {
     public interface IHierarchyWriter
     {
-        void Write(NewDataDTO data, Agent agent);
+        void Write(NewDataDTO data, Guid agentId);
     }
 
     public class HierarchyWriter : IHierarchyWriter
@@ -18,7 +18,7 @@ namespace Server.Utils
             context = ctx;
         }
 
-        public void Write(NewDataDTO data, Agent agent)
+        public void Write(NewDataDTO data, Guid agentId)
         {
             foreach (var item in data.NewSensors)
             {
@@ -36,7 +36,7 @@ namespace Server.Utils
                 var currentContainer = new Container // naming!
                 {
                     DeviceName = container.DeviceName,
-                    AgentId = agent.Id,
+                    AgentId = agentId,
                     Id = container.ContainerId,
                     ParentContainerId = container.ParentId
                 };

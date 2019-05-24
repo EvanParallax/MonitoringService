@@ -22,8 +22,7 @@ namespace Server.Utils
 
         public async Task<(Envelope env, int del)> GetDataAsync(string endpoint)
         {
-            try
-            {
+
                 var watch = Stopwatch.StartNew();
                 HttpResponseMessage response = await Client.GetAsync(endpoint);
                 var responseBody = response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync() : String.Empty;
@@ -48,25 +47,7 @@ namespace Server.Utils
                     }
                 };
 
-                return (envelope, delay);
-
-            }
-            catch (AggregateException ae)
-            {
-                foreach(var item in ae.Flatten().InnerExceptions)
-                    logger.Error(item.Message, item);
-
-                return (new Envelope()
-                {
-                    Header = new Header()
-                    {
-                        ErrorMsg = ae.Message,
-                        AgentTime = DateTime.Now
-                    }
-                }, 
-                0);
-            }
-            
+                return (envelope, delay);            
         }
     }
 }

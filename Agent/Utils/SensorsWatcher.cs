@@ -11,7 +11,7 @@ namespace Agent.Utils
         [CanBeNull]
         HardwareTree GetSensorsData();
 
-        Task WatchProc();
+        void WatchProc();
 
         new void Dispose();
     }
@@ -28,15 +28,12 @@ namespace Agent.Utils
             lastCatchedData = new Queue<HardwareTree>();
         }
 
-        public Task WatchProc()
+        public void WatchProc()
         {
             var tree = provider.GetSystemInfo();
 
             lock (sync)
                 lastCatchedData.Enqueue(tree);
-
-
-            return Task.CompletedTask;
         }
 
         public HardwareTree GetSensorsData()
