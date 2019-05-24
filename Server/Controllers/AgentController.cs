@@ -22,15 +22,13 @@ namespace Server.Controllers
             List<AgentDTO> agents = new List<AgentDTO>();
             foreach (var item in ctx.Agents)
             {
-                var creds = ctx.Credentials.FirstOrDefault(c => c.Id == item.CredId);
                 AgentDTO buff = new AgentDTO()
                 {
                     Id = item.Id,
                     Endpoint = item.Endpoint,
                     OsType = item.OsType,
                     AgentVersion = item.AgentVersion,
-                    Login = creds.Login,
-                    Password = creds.Password
+                    IsEnabled = item.IsEnabled
                 };
                 agents.Add(buff);
             }
@@ -56,7 +54,8 @@ namespace Server.Controllers
                 CredId = cred.Id,
                 Endpoint = agent.Endpoint,
                 OsType = agent.OsType,
-                AgentVersion = agent.AgentVersion
+                AgentVersion = agent.AgentVersion,
+                IsEnabled = false
             };
             ctx.Credentials.Add(cred);
             ctx.Agents.Add(item);
@@ -64,7 +63,7 @@ namespace Server.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("enable/{id}")]
         public IHttpActionResult EnableAgent(string id)
         {
@@ -79,7 +78,7 @@ namespace Server.Controllers
             return NotFound();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("disable/{id}")]
         public IHttpActionResult DisableAgent(string id)
         {

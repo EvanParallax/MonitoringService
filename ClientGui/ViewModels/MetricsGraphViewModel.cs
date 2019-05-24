@@ -3,9 +3,7 @@ using MVVM;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -20,7 +18,7 @@ namespace ClientGui.ViewModels
             set { currentSensor = value; OnPropertyChanged("CurrentSensor"); }
         }
 
-        public ObservableCollection<string> Sensors { get; set; }
+        public List<string> Sensors { get; set; }
 
         private List<MetricDTO> metrics;
         public List<MetricDTO> Metrics
@@ -55,9 +53,10 @@ namespace ClientGui.ViewModels
         {
             Metrics = data;
 
-            Sensors = new ObservableCollection<string>();
+            Sensors = new List<string>();
             foreach (var item in Metrics)
                 Sensors.Add(item.SId);
+            Sensors = Sensors.Distinct().ToList();
             if(!Metrics.Any())
                 currentSensor = Metrics.FirstOrDefault().SId;
 
@@ -79,8 +78,9 @@ namespace ClientGui.ViewModels
         {
             plotModel.Series.Clear();
             var series = new LineSeries { Title = CurrentSensor, MarkerType = MarkerType.Circle };
-            var metrics = Metrics.Where(m => m.SId == CurrentSensor);
-            foreach(var item in metrics)
+            var metrics = Metrics.Where(m => m.SId == CurrentSensor).ToList();
+            metrics.Sort();
+            foreach (var item in metrics)
                 series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(item.Session), item.Svalue));
             plotModel.Title = currentSensor;
             plotModel.Series.Add(series);

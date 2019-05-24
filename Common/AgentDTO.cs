@@ -14,5 +14,6 @@ namespace Common
         public string Endpoint { get; set; }
         public string OsType { get; set; }
         public string AgentVersion { get; set; }
+        public bool IsEnabled { get; set; }
     }
 }

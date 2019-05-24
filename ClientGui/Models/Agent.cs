@@ -12,8 +12,7 @@ namespace ClientGui
         private string endpoint;
         private string osType;
         private string agentVersion;
-        private string login;
-        private string password;
+        private bool isEnabled;
         private List<MetricDTO> metrics;
 
         public List<MetricDTO> Metrics
@@ -76,29 +75,18 @@ namespace ClientGui
 
         }
 
-        public string Login
+        public bool IsEnabled
         {
-            get { return login; }
+            get { return isEnabled; }
 
             set
             {
-                login = value;
-                OnPropertyChanged("Login");
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
             }
 
         }
 
-        public string Password
-        {
-            get { return password; }
-
-            set
-            {
-                password = value;
-                OnPropertyChanged("Password");
-            }
-
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

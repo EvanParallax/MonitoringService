@@ -23,7 +23,7 @@ namespace Server
             builder.RegisterType<MetricsController>().InstancePerRequest();
             var config = builder.Build();
             var writer = config.Resolve<SessionWriter>();
-            ServiceStarter.Start(writer.WriteSession, "WriteDB");
+            //ServiceStarter.Start(writer.WriteSession, "WriteDB");
             return config;
         }
     }

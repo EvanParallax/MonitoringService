@@ -52,6 +52,8 @@
             <Label/>
             <TextBlock Text="Version" />
             <TextBox Text="{Binding AgentVersion, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="Is enabled" />
+            <TextBox Text="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
 
             <Label/>
         </StackPanel>

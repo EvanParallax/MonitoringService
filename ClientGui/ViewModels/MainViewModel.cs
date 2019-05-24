@@ -114,7 +114,7 @@ namespace ClientGui
                 return enableCommand ??
                   (enableCommand = new RelayCommand(async (obj) =>
                   {
-                      var response = await client.GetAsync($"{serverUrl}enableagent/{selectedAgent.Id.ToString()}");
+                      var response = await client.GetAsync($"{serverUrl}enable/{selectedAgent.Id.ToString()}");
 
                       if (!response.IsSuccessStatusCode)
                       {
@@ -122,7 +122,8 @@ namespace ClientGui
                           return;
                       }
 
-                      AgentsChanged?.Invoke(this, EventArgs.Empty);
+                      var agent = Agents.FirstOrDefault(a => a.Id == selectedAgent.Id);
+                      agent.IsEnabled = true;
                   }));
             }
         }
@@ -136,7 +137,7 @@ namespace ClientGui
                 return disableCommand ??
                   (disableCommand = new RelayCommand(async (obj) =>
                   {
-                      var response = await client.GetAsync($"{serverUrl}disableagent/{selectedAgent.Id.ToString()}");
+                      var response = await client.GetAsync($"{serverUrl}disable/{selectedAgent.Id.ToString()}");
 
                       if (!response.IsSuccessStatusCode)
                       {
@@ -144,7 +145,8 @@ namespace ClientGui
                           return;
                       }
 
-                      AgentsChanged?.Invoke(this, EventArgs.Empty);
+                      var agent = Agents.FirstOrDefault(a => a.Id == selectedAgent.Id);
+                      agent.IsEnabled = false;
                   }));
             }
         }
@@ -185,6 +187,7 @@ namespace ClientGui
             }
                 
             string responseBody = await response.Content.ReadAsStringAsync();
+                
 
             foreach (var item in JsonConvert.DeserializeObject<AgentsList>(responseBody).Agents)
                 Agents.Add(new Agent()
@@ -192,7 +195,8 @@ namespace ClientGui
                     Id = item.Id,
                     Endpoint = item.Endpoint,
                     OsType = item.OsType,
-                    AgentVersion = item.AgentVersion
+                    AgentVersion = item.AgentVersion,
+                    IsEnabled = item.IsEnabled
                 });
             if(Agents.Any())
                 SelectedAgent = Agents.First();
